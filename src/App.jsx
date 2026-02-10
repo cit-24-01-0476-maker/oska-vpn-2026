@@ -3,7 +3,8 @@ import {
   Shield, Zap, Globe, Menu, X, Copy, Check, 
   Smartphone, Activity, RefreshCw, MessageCircle, 
   CheckCircle, Server, Lock, Bot, Send, Sparkles, 
-  Wifi, Router as RouterIcon, Wand2, AlertTriangle, Stethoscope, BrainCircuit, Box, ArrowRight
+  Wifi, Router as RouterIcon, Wand2, AlertTriangle, Stethoscope, BrainCircuit, Box, ArrowRight,
+  Newspaper, Radio // අලුතින් එකතු කළ Icons
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -14,7 +15,7 @@ const WhatsAppIcon = ({ className }) => (
   </svg>
 );
 
-// --- DATA CONFIGURATION (UPDATED PRICES) ---
+// --- DATA CONFIGURATION ---
 
 const FREE_CONFIGS = [
   { id: 1, location: "Dialog Zoom 🇸🇬", protocol: "VLESS", speed: "High", ping: "42ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=aka.ms&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" },
@@ -39,6 +40,20 @@ const PROVIDER_PACKAGES = [
   { id: "airtel", name: "Airtel", color: "from-red-500 to-pink-600", items: ["ZOOM Package", "TikTok Package", "YouTube 260 SIM Package"] },
   { id: "slt", name: "SLT", color: "from-blue-600 to-cyan-500", items: ["Router ZOOM Package", "Router Netflix Package"] },
   { id: "fiber", name: "Fiber", color: "from-green-500 to-emerald-600", items: ["ZOOM Package", "Netflix Package"] }
+];
+
+const TECH_NEWS = [
+  { title: "Quantum Encryption", desc: "New protocols are making VPNs even more secure.", time: "2h ago" },
+  { title: "SLT 5G Expansion", desc: "Speeds reaching up to 1Gbps in major cities.", time: "5h ago" },
+  { title: "V2Ray Evolution", desc: "VLESS Reality protocol becomes the new industry standard.", time: "Yesterday" }
+];
+
+const TICKER_MESSAGES = [
+  "🔥 OSKA VPN 2.0 IS LIVE",
+  "⚡ NEW HIGH SPEED SINGAPORE SERVERS ADDED",
+  "🛡️ ZERO-LOG POLICY VERIFIED",
+  "🎮 LOW PING GAMING OPTIMIZED FOR DIALOG & SLT",
+  "🌍 UNBLOCK ALL SOCIAL MEDIA NETWORKS INSTANTLY"
 ];
 
 const ADMIN_PHONE = "94754565755";
@@ -125,6 +140,31 @@ const LiveBackground = () => {
       <motion.div animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.2, 0.1], x: [0, 100, 0] }} transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }} className="absolute bottom-[-20%] right-[-10%] w-[700px] h-[700px] bg-cyan-900/20 rounded-full blur-[120px]" />
       <canvas ref={canvasRef} className="absolute inset-0 block opacity-25" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)] pointer-events-none"></div>
+    </div>
+  );
+};
+
+// --- NEW COMPONENT: TECH TICKER ---
+const TechTicker = () => {
+  return (
+    <div className="bg-cyan-500/10 border-y border-cyan-500/20 py-2 overflow-hidden whitespace-nowrap relative z-10">
+      <div className="flex animate-marquee">
+        {[...TICKER_MESSAGES, ...TICKER_MESSAGES].map((msg, i) => (
+          <span key={i} className="mx-8 text-xs font-bold text-cyan-400 flex items-center gap-2">
+            <Radio size={14} className="animate-pulse" /> {msg}
+          </span>
+        ))}
+      </div>
+      <style>{`
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+          display: inline-flex;
+          animation: marquee 30s linear infinite;
+        }
+      `}</style>
     </div>
   );
 };
@@ -246,6 +286,24 @@ const HomeView = ({ setTab }) => (
         </motion.a>
       </motion.div>
 
+      {/* NEW TECH PULSE SECTION */}
+      <div className="mt-20 w-full max-w-6xl">
+        <div className="flex items-center gap-2 mb-8 justify-center md:justify-start">
+          <Newspaper className="text-cyan-400" />
+          <h2 className="text-2xl font-bold text-white tracking-widest">TECH PULSE</h2>
+          <div className="h-[1px] flex-1 bg-gradient-to-r from-cyan-400/50 to-transparent ml-4 hidden md:block"></div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {TECH_NEWS.map((news, i) => (
+            <motion.div key={i} whileHover={{ scale: 1.02 }} className="bg-white/5 border border-white/10 p-5 rounded-xl text-left hover:bg-cyan-500/5 hover:border-cyan-500/30 transition-all group">
+              <span className="text-[10px] text-cyan-400 font-bold uppercase tracking-widest">{news.time}</span>
+              <h3 className="text-white font-bold mt-1 group-hover:text-cyan-200">{news.title}</h3>
+              <p className="text-gray-400 text-xs mt-2 leading-relaxed">{news.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-16 w-full max-w-6xl">
         {[{ icon: Zap, title: "Low Ping Gaming", desc: "Optimized routes for PUBG, COD, and FreeFire." }, { icon: Shield, title: "100% Secure", desc: "Your data is encrypted. No logs policy." }, { icon: Globe, title: "Unblock Everything", desc: "Access WhatsApp, YouTube & TikTok without limits." }].map((item, i) => (
           <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 + (i * 0.1) }} whileHover={{ y: -5 }} className="bg-[#12121a]/40 backdrop-blur-md border border-white/5 p-6 rounded-2xl hover:bg-[#12121a]/60 hover:border-cyan-500/30 transition-all duration-300 text-left flex flex-col items-center md:items-start text-center md:text-left hover:shadow-lg hover:shadow-cyan-900/20">
@@ -312,10 +370,24 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-gray-100 font-sans selection:bg-cyan-400 selection:text-black relative flex flex-col pt-16">
       <LiveBackground />
+      {/* ADDED TECH TICKER BELOW NAVBAR */}
+      <div className="fixed top-16 left-0 right-0 z-40">
+        <TechTicker />
+      </div>
       <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
-      <main className="flex-grow w-full relative z-10"><AnimatePresence mode="wait">{activeTab === 'home' && <HomeView key="home" setTab={setActiveTab} />}{activeTab === 'free' && <FreeView key="free" />}{activeTab === 'pricing' && <PricingView key="pricing" />}{activeTab === 'tutorials' && <TutorialsView key="tutorials" />}</AnimatePresence></main>
+      <main className="flex-grow w-full relative z-10 pt-12">
+        <AnimatePresence mode="wait">
+          {activeTab === 'home' && <HomeView key="home" setTab={setActiveTab} />}
+          {activeTab === 'free' && <FreeView key="free" />}
+          {activeTab === 'pricing' && <PricingView key="pricing" />}
+          {activeTab === 'tutorials' && <TutorialsView key="tutorials" />}
+        </AnimatePresence>
+      </main>
       <AIChatWidget />
-      <footer className="bg-black/80 backdrop-blur-md py-8 text-center text-gray-600 text-sm border-t border-white/5 relative z-10"><p className="flex items-center justify-center gap-2 mb-2"><Shield size={16} /> Secure V2Ray Network</p><p>© 2026 OSKA VPN. Made for Sri Lanka 🇱🇰</p></footer>
+      <footer className="bg-black/80 backdrop-blur-md py-8 text-center text-gray-600 text-sm border-t border-white/5 relative z-10">
+        <p className="flex items-center justify-center gap-2 mb-2"><Shield size={16} /> Secure V2Ray Network</p>
+        <p>© 2026 OSKA VPN. Made for Sri Lanka 🇱🇰</p>
+      </footer>
     </div>
   );
 }
