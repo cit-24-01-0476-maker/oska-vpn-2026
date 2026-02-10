@@ -14,7 +14,7 @@ const WhatsAppIcon = ({ className }) => (
   </svg>
 );
 
-// --- DATA CONFIGURATION ---
+// --- DATA CONFIGURATION (UPDATED PRICES) ---
 
 const FREE_CONFIGS = [
   { id: 1, location: "Dialog Zoom 🇸🇬", protocol: "VLESS", speed: "High", ping: "42ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=aka.ms&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" },
@@ -28,9 +28,9 @@ const FREE_CONFIGS = [
 ];
 
 const PACKAGES = [
-  { id: "mobile", name: "Mobile SIM Package", price: "LKR 250", period: "/ 30 Days", data: "50 GB", extra: "Extra 50GB = Rs.100", features: ["Dialog 547/797 & Zoom", "Hutch Social", "Airtel Zoom/TikTok/260", "Any Mobile SIM"], popular: true, color: "from-blue-400 to-blue-600", icon: Smartphone },
-  { id: "router", name: "Router Package", price: "LKR 300", period: "/ 30 Days", data: "100 GB", extra: "Extra 100GB = Rs.100", features: ["Dialog Zoom (Router)", "SLT Zoom (Router)", "SLT Netflix (Router)", "High Speed V2Ray"], popular: false, color: "from-cyan-400 to-cyan-600", icon: RouterIcon },
-  { id: "fiber", name: "Fiber Package", price: "LKR 350", period: "/ 30 Days", data: "100 GB", extra: "Extra 100GB = Rs.100", features: ["SLT Fiber Zoom", "SLT Fiber Netflix", "Ultra Low Ping", "Gaming Optimized"], popular: false, color: "from-purple-400 to-purple-600", icon: Wifi }
+  { id: "mobile", name: "Mobile SIM Package", price: "LKR 200", period: "/ 30 Days", data: "100 GB", extra: "Unlimited GB = Rs.400", features: ["Dialog 547/797 & Zoom", "Hutch Social", "Airtel Zoom/TikTok/260", "30 Days Validity", "Fast Speed"], popular: true, color: "from-blue-400 to-blue-600", icon: Smartphone },
+  { id: "router", name: "Router Package", price: "LKR 300", period: "/ 30 Days", data: "100 GB", extra: "Unlimited GB = Rs.800", features: ["Dialog Zoom (Router)", "SLT Zoom (Router)", "SLT Netflix (Router)", "High Speed V2Ray", "30 Days Validity"], popular: false, color: "from-cyan-400 to-cyan-600", icon: RouterIcon },
+  { id: "fiber", name: "Fiber Package", price: "LKR 300", period: "/ 30 Days", data: "100 GB", extra: "Unlimited GB = Rs.800", features: ["SLT Fiber Zoom", "SLT Fiber Netflix", "Ultra Low Ping", "Gaming Optimized", "30 Days Validity"], popular: false, color: "from-purple-400 to-purple-600", icon: Wifi }
 ];
 
 const PROVIDER_PACKAGES = [
@@ -54,7 +54,7 @@ const itemVariants = {
   visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100 } }
 };
 
-// --- LIVE BACKGROUND COMPONENT (DIGITAL RAIN) ---
+// --- LIVE BACKGROUND COMPONENT ---
 const LiveBackground = () => {
   const canvasRef = useRef(null);
 
@@ -63,7 +63,6 @@ const LiveBackground = () => {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     
-    // Set canvas size
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -71,7 +70,6 @@ const LiveBackground = () => {
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    // Matrix characters
     const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
     const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const nums = '0123456789';
@@ -86,7 +84,6 @@ const LiveBackground = () => {
     }
 
     const draw = () => {
-      // Semi-transparent black background for trail effect
       ctx.fillStyle = 'rgba(10, 10, 15, 0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -94,16 +91,13 @@ const LiveBackground = () => {
 
       for (let i = 0; i < rainDrops.length; i++) {
         const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-        
-        // Random colors: Cyan or Purple to match theme
         const isCyan = Math.random() > 0.5;
         ctx.fillStyle = isCyan ? '#22d3ee' : '#a855f7';
         
-        // Add some glow
         if (Math.random() > 0.98) {
            ctx.shadowBlur = 10;
            ctx.shadowColor = isCyan ? '#22d3ee' : '#a855f7';
-           ctx.fillStyle = '#ffffff'; // Sparkle white occasionally
+           ctx.fillStyle = '#ffffff';
         } else {
            ctx.shadowBlur = 0;
         }
@@ -127,14 +121,9 @@ const LiveBackground = () => {
 
   return (
     <div className="fixed inset-0 z-0 pointer-events-none bg-[#0a0a0f]">
-      {/* Background Blobs for depth */}
       <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1], rotate: [0, 90, 0] }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-purple-900/20 rounded-full blur-[120px]" />
       <motion.div animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.2, 0.1], x: [0, 100, 0] }} transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }} className="absolute bottom-[-20%] right-[-10%] w-[700px] h-[700px] bg-cyan-900/20 rounded-full blur-[120px]" />
-      
-      {/* Matrix Rain Canvas */}
       <canvas ref={canvasRef} className="absolute inset-0 block opacity-25" />
-      
-      {/* Vignette Overlay */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)] pointer-events-none"></div>
     </div>
   );
@@ -162,8 +151,11 @@ const AIChatWidget = () => {
     try {
       const apiKey = "AIzaSyDIPcbkvqZbJOy7pnQzt47EeeH6JpNII5w";
       const systemPrompt = `You are OSKA, an elite cyberpunk AI assistant for a VPN service in Sri Lanka. 
-      CURRENT PRICING (30 Days): 1. Mobile SIM (50 GB) - Rs. 250 (Extra 50GB: Rs. 100). Supports: Dialog 547/797, Hutch Social, Airtel Zoom/TikTok/260. 2. Router (100 GB) - Rs. 300 (Extra 100GB: Rs. 100). Supports: Dialog/SLT Zoom & Netflix Routers. 3. Fiber (100 GB) - Rs. 350 (Extra 100GB: Rs. 100). Supports: SLT Fiber Zoom/Netflix.
-      If user asks how to buy or about premium: Tell them to go to the 'Premium Store' tab or click the 'Buy Premium' button. List the prices if they ask.`;
+      NEW PRICING (30 Days): 
+      1. Mobile SIM (100 GB) - Rs. 200 (Unlimited GB: Rs. 400). Supports: Dialog 547/797, Hutch Social, Airtel Zoom/TikTok/260. 
+      2. Router (100 GB) - Rs. 300 (Unlimited GB: Rs. 800). Supports: Dialog/SLT Zoom & Netflix Routers. 
+      3. Fiber (100 GB) - Rs. 300 (Unlimited GB: Rs. 800). Supports: SLT Fiber Zoom/Netflix.
+      If user asks how to buy: Tell them to go to 'Premium Store' or click 'Buy Now'.`;
       
       const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: input }] }], systemInstruction: { parts: [{ text: systemPrompt }] } }) });
       const data = await response.json();
@@ -218,7 +210,7 @@ const ConfigCard = ({ config, highlighted }) => {
 const OrderModal = ({ pkg, onClose }) => {
   const [name, setName] = useState('');
   const [device, setDevice] = useState('Android');
-  const handleSubmit = (e) => { e.preventDefault(); window.open(`https://wa.me/${ADMIN_PHONE}?text=${encodeURIComponent(`*NEW ORDER - OSKA VPN*\n\n📦 *Package:* ${pkg.name}\n💰 *Price:* ${pkg.price} ${pkg.period}\n👤 *Name:* ${name}\n📱 *Device:* ${device}\n\nI want to buy this package.`)}`, '_blank'); onClose(); };
+  const handleSubmit = (e) => { e.preventDefault(); window.open(`https://wa.me/${ADMIN_PHONE}?text=${encodeURIComponent(`*NEW ORDER - OSKA VPN*\n\n📦 *Package:* ${pkg.name}\n💰 *Price:* ${pkg.price} ${pkg.period}\n🏷️ *Data:* ${pkg.data} / ${pkg.extra}\n👤 *Name:* ${name}\n📱 *Device:* ${device}\n\nI want to buy this package.`)}`, '_blank'); onClose(); };
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in zoom-in duration-200">
       <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-[#16161f] border border-cyan-400/30 rounded-2xl w-full max-w-md p-6 relative shadow-[0_0_50px_rgba(34,211,238,0.2)]">
@@ -243,7 +235,6 @@ const HomeView = ({ setTab }) => (
         <button onClick={() => setTab('pricing')} className="px-8 py-4 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] transition-all flex items-center justify-center gap-2 w-full sm:w-auto transform hover:scale-105 duration-200"><Lock size={20} /> Buy Premium</button>
       </motion.div>
 
-      {/* WHATSAPP GROUPS SECTION */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="mt-12 flex flex-col md:flex-row gap-6 w-full max-w-2xl px-4">
         <motion.a href="https://chat.whatsapp.com/LUE12DSAPkkK5Z9wirTV7n" target="_blank" whileHover={{ scale: 1.05 }} className="flex-1 flex items-center justify-between bg-[#25D366]/10 border border-[#25D366]/50 p-4 rounded-xl hover:bg-[#25D366]/20 transition-all cursor-pointer group shadow-[0_0_15px_rgba(37,211,102,0.2)]">
           <div className="flex items-center gap-3"><WhatsAppIcon className="w-8 h-8 text-[#25D366]" /><div className="text-left"><h3 className="text-white font-bold">Main Group</h3><p className="text-[#25D366] text-xs">Official Updates</p></div></div>
@@ -288,9 +279,9 @@ const PricingView = () => {
   const handlePlanRecommendation = async () => { if (!userUsage.trim()) return; setIsProcessing(true); setAiRecommendation(null); try { const apiKey = "AIzaSyDIPcbkvqZbJOy7pnQzt47EeeH6JpNII5w"; const prompt = `I have these premium packages: ${JSON.stringify(PACKAGES.map(p => ({id: p.id, name: p.name, data: p.data, features: p.features})))}. User needs: "${userUsage}". Task: 1. Identify the BEST package ID (mobile, router, or fiber). 2. Write a 1-sentence reason why. Return ONLY valid JSON like: {"id": "mobile", "reason": "Because you need..."}`; const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { responseMimeType: "application/json" } }) }); const data = await response.json(); const result = JSON.parse(data.candidates?.[0]?.content?.parts?.[0]?.text || "{}"); if (result.id) setAiRecommendation(result); } catch (e) { console.error(e); } finally { setIsProcessing(false); } };
   return (
     <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="py-10 px-4 max-w-7xl mx-auto min-h-screen">
-      <div className="text-center mb-10"><h1 className="text-4xl font-bold mb-4 text-white">Premium Plans</h1><p className="text-gray-400">High speed, low ping, unlimited freedom.</p></div>
+      <div className="text-center mb-10"><h1 className="text-4xl font-bold mb-4 text-white">Premium Plans (30 Days)</h1><p className="text-gray-400">High speed, low ping, unlimited freedom.</p></div>
       <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 border border-purple-500/30 p-6 rounded-2xl mb-12 max-w-4xl mx-auto backdrop-blur-sm"><div className="flex items-center gap-3 mb-4"><BrainCircuit className="text-purple-400" size={24} /><h2 className="text-xl font-bold text-white">AI Plan Matcher</h2></div><p className="text-gray-300 text-sm mb-4">Not sure which plan to buy? Tell us what you do (e.g. "I play PUBG mostly" or "I need to download big movies") and AI will pick for you.</p><div className="flex flex-col sm:flex-row gap-3"><input type="text" placeholder="Describe your usage..." className="flex-1 bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-purple-400 outline-none transition-all focus:shadow-[0_0_10px_rgba(168,85,247,0.3)]" value={userUsage} onChange={(e) => setUserUsage(e.target.value)} /><button onClick={handlePlanRecommendation} disabled={isProcessing} className="bg-purple-600 hover:bg-purple-500 text-white font-bold px-6 py-3 rounded-lg flex items-center justify-center gap-2 transition-all hover:shadow-lg hover:shadow-purple-500/30 disabled:opacity-50">{isProcessing ? <RefreshCw className="animate-spin" /> : <Sparkles />}{isProcessing ? "Thinking..." : "Find Best Plan"}</button></div>{aiRecommendation && (<motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-4 p-4 bg-purple-500/10 border border-purple-500/40 rounded-xl"><p className="text-purple-200 font-medium"><span className="text-white font-bold">AI Suggestion:</span> {aiRecommendation.reason}</p></motion.div>)}</div>
-      <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid md:grid-cols-3 gap-8 mb-20">{PACKAGES.map((pkg) => (<motion.div variants={itemVariants} whileHover={{ y: -10, boxShadow: "0 0 30px rgba(6, 182, 212, 0.15)" }} key={pkg.id} className={`relative bg-[#12121a]/60 backdrop-blur-md rounded-2xl p-8 border transition-all duration-300 flex flex-col ${pkg.id === aiRecommendation?.id ? 'border-purple-500 shadow-[0_0_40px_rgba(168,85,247,0.3)] scale-105 z-10 ring-1 ring-purple-400' : pkg.popular ? 'border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.15)] scale-105 z-10' : 'border-white/10 hover:border-white/20'}`}>{pkg.id === aiRecommendation?.id && <span className="absolute -top-3 right-4 bg-purple-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1"><Sparkles size={12}/> AI RECOMMENDED</span>}{pkg.popular && !aiRecommendation && <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-cyan-400 text-black text-xs font-bold px-4 py-1 rounded-full shadow-lg">BEST SELLER</span>}<div className="flex items-center gap-3 mb-4"><div className={`p-3 rounded-lg bg-gradient-to-br ${pkg.color} bg-opacity-20`}><pkg.icon className="w-6 h-6 text-white" /></div><h3 className="text-xl font-bold text-gray-200">{pkg.name}</h3></div><div className="mb-6"><div className="flex items-baseline"><span className={`text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r ${pkg.color}`}>{pkg.price}</span><span className="text-gray-500 ml-2 text-sm">{pkg.period}</span></div><p className="text-white font-bold mt-2 flex items-center gap-2"><Server size={14} className="text-cyan-400"/> {pkg.data}</p><p className="text-gray-500 text-xs">{pkg.extra}</p></div><ul className="space-y-4 mb-8 flex-1 border-t border-white/5 pt-6">{pkg.features.map((feat, i) => (<li key={i} className="flex items-center gap-3 text-sm text-gray-300"><CheckCircle size={16} className="text-cyan-400 min-w-[16px]" />{feat}</li>))}</ul><button onClick={() => setSelectedPkg(pkg)} className={`w-full py-3 rounded-lg font-bold transition-all ${pkg.popular ? 'bg-cyan-400 text-black hover:bg-cyan-300 hover:shadow-[0_0_15px_rgba(34,211,238,0.5)]' : 'bg-white/10 text-white hover:bg-white/20'}`}>Buy Now</button></motion.div>))}</motion.div>
+      <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid md:grid-cols-3 gap-8 mb-20">{PACKAGES.map((pkg) => (<motion.div variants={itemVariants} whileHover={{ y: -10, boxShadow: "0 0 30px rgba(6, 182, 212, 0.15)" }} key={pkg.id} className={`relative bg-[#12121a]/60 backdrop-blur-md rounded-2xl p-8 border transition-all duration-300 flex flex-col ${pkg.id === aiRecommendation?.id ? 'border-purple-500 shadow-[0_0_40px_rgba(168,85,247,0.3)] scale-105 z-10 ring-1 ring-purple-400' : pkg.popular ? 'border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.15)] scale-105 z-10' : 'border-white/10 hover:border-white/20'}`}>{pkg.id === aiRecommendation?.id && <span className="absolute -top-3 right-4 bg-purple-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1"><Sparkles size={12}/> AI RECOMMENDED</span>}{pkg.popular && !aiRecommendation && <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-cyan-400 text-black text-xs font-bold px-4 py-1 rounded-full shadow-lg">BEST SELLER</span>}<div className="flex items-center gap-3 mb-4"><div className={`p-3 rounded-lg bg-gradient-to-br ${pkg.color} bg-opacity-20`}><pkg.icon className="w-6 h-6 text-white" /></div><h3 className="text-xl font-bold text-gray-200">{pkg.name}</h3></div><div className="mb-6"><div className="flex items-baseline"><span className={`text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r ${pkg.color}`}>{pkg.price}</span><span className="text-gray-500 ml-2 text-sm">{pkg.period}</span></div><p className="text-white font-bold mt-2 flex items-center gap-2"><Server size={14} className="text-cyan-400"/> {pkg.data}</p><p className="text-cyan-400 text-sm font-semibold mt-1">➕ {pkg.extra}</p></div><ul className="space-y-4 mb-8 flex-1 border-t border-white/5 pt-6">{pkg.features.map((feat, i) => (<li key={i} className="flex items-center gap-3 text-sm text-gray-300"><CheckCircle size={16} className="text-cyan-400 min-w-[16px]" />{feat}</li>))}</ul><button onClick={() => setSelectedPkg(pkg)} className={`w-full py-3 rounded-lg font-bold transition-all ${pkg.popular ? 'bg-cyan-400 text-black hover:bg-cyan-300 hover:shadow-[0_0_15px_rgba(34,211,238,0.5)]' : 'bg-white/10 text-white hover:bg-white/20'}`}>Buy Now</button></motion.div>))}</motion.div>
       <div className="mt-20"><h2 className="text-3xl font-bold text-center text-white mb-8 flex items-center justify-center gap-3"><Box className="text-cyan-400" /> Available V2Ray Packages</h2><motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid md:grid-cols-3 lg:grid-cols-5 gap-4 pb-20">{PROVIDER_PACKAGES.map((provider) => (<motion.div key={provider.id} variants={itemVariants} whileHover={{ y: -5, boxShadow: "0 0 20px rgba(255,255,255,0.05)" }} className={`bg-[#12121a]/60 backdrop-blur-md border border-white/10 rounded-xl p-6 flex flex-col items-center text-center transition-all hover:border-${provider.color.split('-')[1]}-500/50`}><div className={`w-12 h-12 rounded-full bg-gradient-to-br ${provider.color} flex items-center justify-center text-xl font-bold text-white mb-4 shadow-lg`}>{provider.name[0]}</div><h3 className="text-xl font-bold text-white mb-4">{provider.name}</h3><ul className="space-y-2 w-full">{provider.items.map((item, idx) => (<li key={idx} className="text-gray-300 text-xs bg-white/5 border border-white/5 rounded px-2 py-2 w-full">{item}</li>))}</ul></motion.div>))}</motion.div></div>
       {selectedPkg && <OrderModal pkg={selectedPkg} onClose={() => setSelectedPkg(null)} />}
     </motion.div>
