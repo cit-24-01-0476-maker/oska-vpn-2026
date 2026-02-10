@@ -321,13 +321,13 @@ const Navbar = ({ activeTab, setActiveTab }) => {
   );
 };
 
-// --- CONFIG CARD WITH COUNTDOWN ---
+// --- CONFIG CARD WITH BOXED COUNTDOWN ---
 const ConfigCard = ({ config, highlighted }) => {
   const [copied, setCopied] = useState(false);
   const handleCopy = () => { navigator.clipboard.writeText(config.code); setCopied(true); setTimeout(() => setCopied(false), 2000); };
   
-  // Fake 15-day countdown logic
-  const [timeLeft, setTimeLeft] = useState("14d 23h 59m");
+  // Updated to return separate parts for Boxes
+  const [timeLeft, setTimeLeft] = useState({ d: 14, h: 23, m: 59 });
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date().getTime();
@@ -336,19 +336,33 @@ const ConfigCard = ({ config, highlighted }) => {
       const d = Math.floor(diff / (1000 * 60 * 60 * 24));
       const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      setTimeLeft(`${d}d ${h}h ${m}m`);
+      setTimeLeft({ d, h, m });
     }, 60000);
     return () => clearInterval(timer);
   }, []);
 
   return (
     <motion.div variants={itemVariants} whileHover={{ y: -5, scale: 1.02 }} className={`bg-[#12121a]/40 backdrop-blur-md border rounded-xl p-5 transition-all duration-300 group relative overflow-hidden ${highlighted ? 'border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.2)] ring-1 ring-cyan-400' : 'border-white/10 hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(34,211,238,0.15)]'}`}>
-      {/* ADDED COUNTDOWN BADGE */}
-      <div className="absolute top-0 right-0 bg-red-600/20 text-red-400 text-[9px] font-bold px-2 py-1 rounded-bl-lg z-20 flex items-center gap-1 border-l border-b border-red-500/30 tracking-widest uppercase italic shadow-lg">
-        <Clock size={10} className="animate-pulse"/> {timeLeft} LEFT
+      
+      {/* --- NEW BOXED COUNTDOWN --- */}
+      <div className="absolute top-0 right-0 bg-red-900/40 backdrop-blur-md border-l border-b border-red-500/30 rounded-bl-xl z-20 flex items-center gap-2 px-3 py-1.5 shadow-[0_0_15px_rgba(239,68,68,0.4)]">
+        <span className="text-[10px] text-red-300 font-bold tracking-wider mr-1 flex items-center gap-1">
+           <Clock size={10} className="animate-pulse" /> ENDS IN:
+        </span>
+        <div className="flex gap-1">
+          <div className="bg-black/60 border border-red-500/50 rounded px-1.5 py-0.5 min-w-[20px] text-center">
+            <span className="text-white text-[10px] font-mono font-bold">{timeLeft.d}d</span>
+          </div>
+          <div className="bg-black/60 border border-red-500/50 rounded px-1.5 py-0.5 min-w-[20px] text-center">
+            <span className="text-white text-[10px] font-mono font-bold">{timeLeft.h}h</span>
+          </div>
+          <div className="bg-black/60 border border-red-500/50 rounded px-1.5 py-0.5 min-w-[20px] text-center">
+            <span className="text-white text-[10px] font-mono font-bold">{timeLeft.m}m</span>
+          </div>
+        </div>
       </div>
       
-      {highlighted && (<div className="absolute top-8 right-0 bg-cyan-400 text-black text-[10px] font-bold px-2 py-1 rounded-bl-lg z-20 flex items-center gap-1 shadow-lg"><Sparkles size={10} /> AI PICK</div>)}
+      {highlighted && (<div className="absolute top-10 right-0 bg-cyan-400 text-black text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tl-lg z-20 flex items-center gap-1 shadow-lg mt-2"><Sparkles size={10} /> AI PICK</div>)}
       <div className={`absolute top-0 right-0 w-20 h-20 blur-2xl rounded-full -translate-y-1/2 translate-x-1/2 transition-colors duration-500 ${highlighted ? 'bg-cyan-500/30' : 'bg-cyan-500/10 group-hover:bg-cyan-500/20'}`}></div>
       <div className="flex justify-between items-start mb-4 relative z-10"><div><div className="flex items-center gap-2 mb-1"><Globe size={18} className="text-purple-400 group-hover:text-purple-300 transition-colors" /><h3 className="font-bold text-lg text-white group-hover:text-cyan-200 transition-colors">{config.location}</h3></div><span className="text-xs bg-white/5 px-2 py-1 rounded text-cyan-300 font-mono border border-cyan-500/20">{config.protocol}</span></div><div className="text-right"><div className="flex items-center gap-1 justify-end text-green-400 text-sm font-bold"><Activity size={14} className="animate-pulse" /><span>{config.ping}</span></div><p className="text-xs text-gray-500 mt-1">{config.updated}</p></div></div>
       <div className="bg-black/40 p-3 rounded mb-4 font-mono text-xs text-gray-400 truncate border border-white/5 group-hover:border-white/10 transition-colors">{config.code}</div>
@@ -360,7 +374,7 @@ const ConfigCard = ({ config, highlighted }) => {
 const OrderModal = ({ pkg, onClose }) => {
   const [name, setName] = useState('');
   const [device, setDevice] = useState('Android');
-  const handleSubmit = (e) => { e.preventDefault(); window.open(`https://wa.me/${ADMIN_PHONE}?text=${encodeURIComponent(`*NEW ORDER - OSKA VPN*\n\n📦 *Package:* ${pkg.name}\n💰 *Price:* ${pkg.price} ${pkg.price}\n🏷️ *Data:* ${pkg.data} / ${pkg.extra}\n👤 *Name:* ${name}\n📱 *Device:* ${device}\n\nI want to buy this package.`)}`, '_blank'); onClose(); };
+  const handleSubmit = (e) => { e.preventDefault(); window.open(`https://wa.me/${ADMIN_PHONE}?text=${encodeURIComponent(`*NEW ORDER - OSKA VPN*\n\n📦 *Package:* ${pkg.name}\n💰 *Price:* ${pkg.price} ${pkg.period}\n🏷️ *Data:* ${pkg.data} / ${pkg.extra}\n👤 *Name:* ${name}\n📱 *Device:* ${device}\n\nI want to buy this package.`)}`, '_blank'); onClose(); };
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in zoom-in duration-200">
       <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-[#16161f] border border-cyan-400/30 rounded-2xl w-full max-w-md p-6 relative shadow-[0_0_50px_rgba(34,211,238,0.2)]">
