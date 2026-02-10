@@ -321,23 +321,18 @@ const Navbar = ({ activeTab, setActiveTab }) => {
   );
 };
 
-// --- CONFIG CARD WITH REAL LIVE NEON COUNTDOWN ---
+// --- CONFIG CARD WITH COMPACT LIVE COUNTDOWN ---
 const ConfigCard = ({ config, highlighted }) => {
   const [copied, setCopied] = useState(false);
   const handleCopy = () => { navigator.clipboard.writeText(config.code); setCopied(true); setTimeout(() => setCopied(false), 2000); };
   
-  // REAL TIME COUNTDOWN LOGIC
   const [timeLeft, setTimeLeft] = useState({ days: 15, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
-    // Set expiry date: 15 days from now (static date for demo consistency or dynamic)
-    // Here using a fixed date to keep it consistent for all users: Feb 25, 2026
     const expiryDate = new Date("Feb 25, 2026 23:59:59").getTime();
-
     const interval = setInterval(() => {
       const now = new Date().getTime();
       const distance = expiryDate - now;
-
       if (distance < 0) {
         clearInterval(interval);
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -349,44 +344,46 @@ const ConfigCard = ({ config, highlighted }) => {
         setTimeLeft({ days, hours, minutes, seconds });
       }
     }, 1000);
-
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <motion.div variants={itemVariants} whileHover={{ y: -5, scale: 1.02 }} className={`bg-[#12121a]/40 backdrop-blur-md border rounded-xl p-5 transition-all duration-300 group relative overflow-visible mt-6 ${highlighted ? 'border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.2)] ring-1 ring-cyan-400' : 'border-white/10 hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(34,211,238,0.15)]'}`}>
+    <motion.div variants={itemVariants} whileHover={{ y: -5, scale: 1.02 }} className={`bg-[#12121a]/40 backdrop-blur-md border rounded-xl p-5 transition-all duration-300 group relative overflow-visible mt-8 ${highlighted ? 'border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.2)] ring-1 ring-cyan-400' : 'border-white/10 hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(34,211,238,0.15)]'}`}>
       
-      {/* --- FLOATING NEON GREEN COUNTDOWN BOX --- */}
-      <div className="absolute -top-6 -right-2 z-30 flex flex-col items-end">
-        <div className="bg-black/90 border border-green-500 shadow-[0_0_15px_rgba(34,197,94,0.6)] px-2 py-1.5 rounded-lg flex items-center gap-2 transform rotate-1 backdrop-blur-xl">
-           <Timer size={14} className="text-green-400 animate-spin-slow" />
-           <div className="flex gap-1 items-center">
+      {/* --- FLOATING COMPACT NEON COUNTDOWN --- */}
+      <div className="absolute -top-6 right-0 z-30">
+        <div className="bg-black/90 border border-green-500/80 shadow-[0_0_15px_rgba(34,197,94,0.5)] px-2 py-1 rounded-lg flex items-center gap-1.5 backdrop-blur-xl scale-90 origin-right">
+           <span className="relative flex h-2 w-2">
+             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+             <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+           </span>
+           <div className="flex gap-0.5 items-center">
              <div className="flex flex-col items-center">
-                <div className="bg-[#0f2a15] border border-green-500/50 rounded px-1.5 min-w-[22px] text-center shadow-inner">
-                  <span className="text-green-400 text-xs font-mono font-bold tracking-widest">{String(timeLeft.days).padStart(2, '0')}</span>
+                <div className="bg-[#0f2a15] border border-green-500/30 rounded px-1 min-w-[18px] text-center">
+                  <span className="text-green-400 text-[9px] font-mono font-bold">{String(timeLeft.days).padStart(2, '0')}</span>
                 </div>
-                <span className="text-[6px] text-green-500/80 uppercase mt-0.5">Days</span>
+                <span className="text-[5px] text-green-500/70 uppercase">Days</span>
              </div>
-             <span className="text-green-500 font-bold -mt-2">:</span>
+             <span className="text-green-500/50 font-bold -mt-2 text-[8px]">:</span>
              <div className="flex flex-col items-center">
-                <div className="bg-[#0f2a15] border border-green-500/50 rounded px-1.5 min-w-[22px] text-center shadow-inner">
-                  <span className="text-green-400 text-xs font-mono font-bold tracking-widest">{String(timeLeft.hours).padStart(2, '0')}</span>
+                <div className="bg-[#0f2a15] border border-green-500/30 rounded px-1 min-w-[18px] text-center">
+                  <span className="text-green-400 text-[9px] font-mono font-bold">{String(timeLeft.hours).padStart(2, '0')}</span>
                 </div>
-                <span className="text-[6px] text-green-500/80 uppercase mt-0.5">Hrs</span>
+                <span className="text-[5px] text-green-500/70 uppercase">Hrs</span>
              </div>
-             <span className="text-green-500 font-bold -mt-2">:</span>
+             <span className="text-green-500/50 font-bold -mt-2 text-[8px]">:</span>
              <div className="flex flex-col items-center">
-                <div className="bg-[#0f2a15] border border-green-500/50 rounded px-1.5 min-w-[22px] text-center shadow-inner">
-                  <span className="text-green-400 text-xs font-mono font-bold tracking-widest">{String(timeLeft.minutes).padStart(2, '0')}</span>
+                <div className="bg-[#0f2a15] border border-green-500/30 rounded px-1 min-w-[18px] text-center">
+                  <span className="text-green-400 text-[9px] font-mono font-bold">{String(timeLeft.minutes).padStart(2, '0')}</span>
                 </div>
-                <span className="text-[6px] text-green-500/80 uppercase mt-0.5">Min</span>
+                <span className="text-[5px] text-green-500/70 uppercase">Min</span>
              </div>
-             <span className="text-green-500 font-bold -mt-2">:</span>
+             <span className="text-green-500/50 font-bold -mt-2 text-[8px]">:</span>
              <div className="flex flex-col items-center">
-                <div className="bg-[#0f2a15] border border-green-500/50 rounded px-1.5 min-w-[22px] text-center shadow-inner">
-                  <span className="text-green-400 text-xs font-mono font-bold tracking-widest animate-pulse">{String(timeLeft.seconds).padStart(2, '0')}</span>
+                <div className="bg-[#0f2a15] border border-green-500/30 rounded px-1 min-w-[18px] text-center shadow-[0_0_5px_rgba(34,197,94,0.3)]">
+                  <span className="text-green-300 text-[9px] font-mono font-bold animate-pulse">{String(timeLeft.seconds).padStart(2, '0')}</span>
                 </div>
-                <span className="text-[6px] text-green-500/80 uppercase mt-0.5">Sec</span>
+                <span className="text-[5px] text-green-500/70 uppercase">Sec</span>
              </div>
            </div>
         </div>
@@ -425,12 +422,12 @@ const HomeView = ({ setTab }) => (
       <motion.h1 initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }} className="text-5xl md:text-7xl lg:text-8xl font-extrabold mb-6 tracking-tight text-white leading-tight drop-shadow-[0_0_20px_rgba(34,211,238,0.4)]">UNLEASH <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 animate-gradient">ULTIMATE</span><br/> FREEDOM</motion.h1>
       <motion.p initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }} className="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">Gaming, Streaming, and Browsing with 0% Lag. Secure, Fast, and Untraceable connections.</motion.p>
       
-      <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.6 }} className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+      <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.6 }} className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
         <button onClick={() => setTab('free')} className="px-8 py-4 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-cyan-400/50 text-white transition-all font-bold backdrop-blur-sm flex items-center justify-center gap-2 w-full sm:w-auto hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]"><Zap size={20} className="text-yellow-400"/> Get Free Configs</button>
         <button onClick={() => setTab('pricing')} className="px-8 py-4 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] transition-all flex items-center justify-center gap-2 w-full sm:w-auto transform hover:scale-105 duration-200"><Lock size={20} /> Buy Premium</button>
       </motion.div>
 
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="mt-12 flex flex-col md:flex-row gap-6 w-full max-w-2xl px-4">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="mt-12 flex flex-col md:flex-row gap-6 w-full max-w-2xl px-4 justify-center">
         <motion.a href="https://chat.whatsapp.com/LUE12DSAPkkK5Z9wirTV7n" target="_blank" whileHover={{ scale: 1.05 }} className="flex-1 flex items-center justify-between bg-[#25D366]/10 border border-[#25D366]/50 p-4 rounded-xl hover:bg-[#25D366]/20 transition-all cursor-pointer group shadow-[0_0_15px_rgba(37,211,102,0.2)]">
           <div className="flex items-center gap-3"><WhatsAppIcon className="w-8 h-8 text-[#25D366]" /><div className="text-left"><h3 className="text-white font-bold">Main Group</h3><p className="text-[#25D366] text-xs">Official Updates</p></div></div>
           <div className="flex items-center gap-2"><span className="text-white font-bold text-sm animate-pulse drop-shadow-[0_0_5px_#25D366]">JOIN NOW</span><ArrowRight size={16} className="text-white group-hover:translate-x-1 transition-transform" /></div>
@@ -442,7 +439,7 @@ const HomeView = ({ setTab }) => (
       </motion.div>
 
       {/* TECH PULSE SECTION */}
-      <div className="mt-20 w-full max-w-6xl">
+      <div className="mt-20 w-full max-w-6xl px-4">
         <div className="flex items-center gap-2 mb-8 justify-center md:justify-start">
           <div className="w-2 h-8 bg-cyan-400 rounded-full" />
           <h2 className="text-2xl font-bold text-white tracking-[0.2em]">TECH PULSE</h2>
@@ -460,7 +457,7 @@ const HomeView = ({ setTab }) => (
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-16 w-full max-w-6xl">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-16 w-full max-w-6xl px-4">
         {[{ icon: Zap, title: "Low Ping Gaming", desc: "Optimized routes for PUBG, COD, and FreeFire." }, { icon: Shield, title: "100% Secure", desc: "Your data is encrypted. No logs policy." }, { icon: Globe, title: "Unblock Everything", desc: "Access WhatsApp, YouTube & TikTok without limits." }].map((item, i) => (
           <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 + (i * 0.1) }} whileHover={{ y: -5 }} className="bg-[#12121a]/40 backdrop-blur-md border border-white/5 p-6 rounded-2xl hover:bg-[#12121a]/60 hover:border-cyan-500/30 transition-all duration-300 text-left flex flex-col items-center md:items-start text-center md:text-left hover:shadow-lg hover:shadow-cyan-900/20">
             <item.icon className="w-10 h-10 text-cyan-400 mb-4 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]" /><h3 className="text-lg font-bold text-white">{item.title}</h3><p className="text-gray-400 text-sm mt-2">{item.desc}</p>
@@ -480,7 +477,7 @@ const FreeView = () => {
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="py-10 px-4 max-w-6xl mx-auto min-h-screen">
       <div className="mb-10 bg-gradient-to-r from-cyan-900/20 to-purple-900/20 p-6 rounded-2xl border border-cyan-500/30 backdrop-blur-sm"><div className="flex flex-col md:flex-row gap-4 items-center justify-between"><div><h2 className="text-xl font-bold text-white flex items-center gap-2"><Wand2 className="text-cyan-400" /> Smart Config Matcher</h2><p className="text-gray-400 text-sm">Tell AI what you want to do (e.g. "Gaming on Dialog" or "Netflix SLT")</p></div><div className="flex w-full md:w-auto gap-2"><input type="text" placeholder="I want to play COD Mobile..." className="bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white text-sm focus:border-cyan-400 outline-none w-full md:w-64 transition-all focus:shadow-[0_0_10px_rgba(34,211,238,0.3)]" value={userGoal} onChange={(e) => setUserGoal(e.target.value)} /><button onClick={getRecommendation} disabled={isAnalyzing} className="bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-4 py-2 rounded-lg flex items-center gap-2 transition-all hover:shadow-lg hover:shadow-cyan-500/30 disabled:opacity-50">{isAnalyzing ? <RefreshCw className="animate-spin" size={18} /> : <Sparkles size={18} />} {isAnalyzing ? "Analyzing..." : "Find Best"}</button></div></div></div>
       <div className="flex justify-between items-center mb-6"><div><h1 className="text-2xl md:text-3xl font-bold text-white mb-1">Free V2Ray Configs</h1><p className="text-gray-400 text-sm">Updated automatically every 30 minutes.</p></div><button onClick={() => window.location.reload()} className="p-3 bg-white/5 rounded-full hover:bg-cyan-400 hover:text-black transition-colors text-white"><RefreshCw size={20} /></button></div>
-      <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20">{FREE_CONFIGS.map(config => <ConfigCard key={config.id} config={config} highlighted={config.id === recommendedId} />)}</motion.div>
+      <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20 px-2">{FREE_CONFIGS.map(config => <ConfigCard key={config.id} config={config} highlighted={config.id === recommendedId} />)}</motion.div>
     </motion.div>
   );
 };
