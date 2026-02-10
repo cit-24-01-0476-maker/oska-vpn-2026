@@ -321,7 +321,7 @@ const Navbar = ({ activeTab, setActiveTab }) => {
   );
 };
 
-// --- CONFIG CARD WITH COMPACT LIVE COUNTDOWN ---
+// --- CONFIG CARD WITH RESPONSIVE COUNTDOWN ---
 const ConfigCard = ({ config, highlighted }) => {
   const [copied, setCopied] = useState(false);
   const handleCopy = () => { navigator.clipboard.writeText(config.code); setCopied(true); setTimeout(() => setCopied(false), 2000); };
@@ -348,11 +348,11 @@ const ConfigCard = ({ config, highlighted }) => {
   }, []);
 
   return (
-    <motion.div variants={itemVariants} whileHover={{ y: -5, scale: 1.02 }} className={`bg-[#12121a]/40 backdrop-blur-md border rounded-xl p-5 transition-all duration-300 group relative overflow-visible mt-8 ${highlighted ? 'border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.2)] ring-1 ring-cyan-400' : 'border-white/10 hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(34,211,238,0.15)]'}`}>
+    <motion.div variants={itemVariants} whileHover={{ y: -5, scale: 1.02 }} className={`bg-[#12121a]/40 backdrop-blur-md border rounded-xl p-5 transition-all duration-300 group relative overflow-visible mt-8 mx-auto w-full ${highlighted ? 'border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.2)] ring-1 ring-cyan-400' : 'border-white/10 hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(34,211,238,0.15)]'}`}>
       
-      {/* --- FLOATING COMPACT NEON COUNTDOWN --- */}
-      <div className="absolute -top-6 right-0 z-30">
-        <div className="bg-black/90 border border-green-500/80 shadow-[0_0_15px_rgba(34,197,94,0.5)] px-2 py-1 rounded-lg flex items-center gap-1.5 backdrop-blur-xl scale-90 origin-right">
+      {/* --- RESPONSIVE COUNTDOWN BOX --- */}
+      <div className="absolute -top-5 right-2 md:-top-6 md:right-0 z-30 transform scale-90 md:scale-100 origin-top-right">
+        <div className="bg-black/90 border border-green-500/80 shadow-[0_0_15px_rgba(34,197,94,0.5)] px-2 py-1 rounded-lg flex items-center gap-1.5 backdrop-blur-xl">
            <span className="relative flex h-2 w-2">
              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
@@ -360,30 +360,30 @@ const ConfigCard = ({ config, highlighted }) => {
            <div className="flex gap-0.5 items-center">
              <div className="flex flex-col items-center">
                 <div className="bg-[#0f2a15] border border-green-500/30 rounded px-1 min-w-[18px] text-center">
-                  <span className="text-green-400 text-[9px] font-mono font-bold">{String(timeLeft.days).padStart(2, '0')}</span>
+                  <span className="text-green-400 text-[9px] md:text-[10px] font-mono font-bold">{String(timeLeft.days).padStart(2, '0')}</span>
                 </div>
-                <span className="text-[5px] text-green-500/70 uppercase">Days</span>
+                <span className="text-[5px] md:text-[6px] text-green-500/70 uppercase">Days</span>
              </div>
              <span className="text-green-500/50 font-bold -mt-2 text-[8px]">:</span>
              <div className="flex flex-col items-center">
                 <div className="bg-[#0f2a15] border border-green-500/30 rounded px-1 min-w-[18px] text-center">
-                  <span className="text-green-400 text-[9px] font-mono font-bold">{String(timeLeft.hours).padStart(2, '0')}</span>
+                  <span className="text-green-400 text-[9px] md:text-[10px] font-mono font-bold">{String(timeLeft.hours).padStart(2, '0')}</span>
                 </div>
-                <span className="text-[5px] text-green-500/70 uppercase">Hrs</span>
+                <span className="text-[5px] md:text-[6px] text-green-500/70 uppercase">Hrs</span>
              </div>
              <span className="text-green-500/50 font-bold -mt-2 text-[8px]">:</span>
              <div className="flex flex-col items-center">
                 <div className="bg-[#0f2a15] border border-green-500/30 rounded px-1 min-w-[18px] text-center">
-                  <span className="text-green-400 text-[9px] font-mono font-bold">{String(timeLeft.minutes).padStart(2, '0')}</span>
+                  <span className="text-green-400 text-[9px] md:text-[10px] font-mono font-bold">{String(timeLeft.minutes).padStart(2, '0')}</span>
                 </div>
-                <span className="text-[5px] text-green-500/70 uppercase">Min</span>
+                <span className="text-[5px] md:text-[6px] text-green-500/70 uppercase">Min</span>
              </div>
              <span className="text-green-500/50 font-bold -mt-2 text-[8px]">:</span>
              <div className="flex flex-col items-center">
                 <div className="bg-[#0f2a15] border border-green-500/30 rounded px-1 min-w-[18px] text-center shadow-[0_0_5px_rgba(34,197,94,0.3)]">
-                  <span className="text-green-300 text-[9px] font-mono font-bold animate-pulse">{String(timeLeft.seconds).padStart(2, '0')}</span>
+                  <span className="text-green-300 text-[9px] md:text-[10px] font-mono font-bold animate-pulse">{String(timeLeft.seconds).padStart(2, '0')}</span>
                 </div>
-                <span className="text-[5px] text-green-500/70 uppercase">Sec</span>
+                <span className="text-[5px] md:text-[6px] text-green-500/70 uppercase">Sec</span>
              </div>
            </div>
         </div>
@@ -477,7 +477,7 @@ const FreeView = () => {
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="py-10 px-4 max-w-6xl mx-auto min-h-screen">
       <div className="mb-10 bg-gradient-to-r from-cyan-900/20 to-purple-900/20 p-6 rounded-2xl border border-cyan-500/30 backdrop-blur-sm"><div className="flex flex-col md:flex-row gap-4 items-center justify-between"><div><h2 className="text-xl font-bold text-white flex items-center gap-2"><Wand2 className="text-cyan-400" /> Smart Config Matcher</h2><p className="text-gray-400 text-sm">Tell AI what you want to do (e.g. "Gaming on Dialog" or "Netflix SLT")</p></div><div className="flex w-full md:w-auto gap-2"><input type="text" placeholder="I want to play COD Mobile..." className="bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white text-sm focus:border-cyan-400 outline-none w-full md:w-64 transition-all focus:shadow-[0_0_10px_rgba(34,211,238,0.3)]" value={userGoal} onChange={(e) => setUserGoal(e.target.value)} /><button onClick={getRecommendation} disabled={isAnalyzing} className="bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-4 py-2 rounded-lg flex items-center gap-2 transition-all hover:shadow-lg hover:shadow-cyan-500/30 disabled:opacity-50">{isAnalyzing ? <RefreshCw className="animate-spin" size={18} /> : <Sparkles size={18} />} {isAnalyzing ? "Analyzing..." : "Find Best"}</button></div></div></div>
       <div className="flex justify-between items-center mb-6"><div><h1 className="text-2xl md:text-3xl font-bold text-white mb-1">Free V2Ray Configs</h1><p className="text-gray-400 text-sm">Updated automatically every 30 minutes.</p></div><button onClick={() => window.location.reload()} className="p-3 bg-white/5 rounded-full hover:bg-cyan-400 hover:text-black transition-colors text-white"><RefreshCw size={20} /></button></div>
-      <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20 px-2">{FREE_CONFIGS.map(config => <ConfigCard key={config.id} config={config} highlighted={config.id === recommendedId} />)}</motion.div>
+      <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-10 md:gap-y-8 gap-x-6 pb-20 px-2">{FREE_CONFIGS.map(config => <ConfigCard key={config.id} config={config} highlighted={config.id === recommendedId} />)}</motion.div>
     </motion.div>
   );
 };
