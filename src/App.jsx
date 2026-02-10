@@ -4,7 +4,7 @@ import {
   Smartphone, Activity, RefreshCw, MessageCircle, 
   CheckCircle, Server, Lock, Bot, Send, Sparkles, 
   Wifi, Router as RouterIcon, Wand2, AlertTriangle, Stethoscope, BrainCircuit, Box, ArrowRight,
-  Newspaper, Radio, Clock, Bell
+  Newspaper, Radio, Clock, Bell, Timer
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -321,50 +321,81 @@ const Navbar = ({ activeTab, setActiveTab }) => {
   );
 };
 
-// --- CONFIG CARD WITH BOXED COUNTDOWN ---
+// --- CONFIG CARD WITH REAL LIVE NEON COUNTDOWN ---
 const ConfigCard = ({ config, highlighted }) => {
   const [copied, setCopied] = useState(false);
   const handleCopy = () => { navigator.clipboard.writeText(config.code); setCopied(true); setTimeout(() => setCopied(false), 2000); };
   
-  // Updated to return separate parts for Boxes
-  const [timeLeft, setTimeLeft] = useState({ d: 14, h: 23, m: 59 });
+  // REAL TIME COUNTDOWN LOGIC
+  const [timeLeft, setTimeLeft] = useState({ days: 15, hours: 0, minutes: 0, seconds: 0 });
+
   useEffect(() => {
-    const timer = setInterval(() => {
+    // Set expiry date: 15 days from now (static date for demo consistency or dynamic)
+    // Here using a fixed date to keep it consistent for all users: Feb 25, 2026
+    const expiryDate = new Date("Feb 25, 2026 23:59:59").getTime();
+
+    const interval = setInterval(() => {
       const now = new Date().getTime();
-      const expiry = new Date("Feb 25, 2026 23:59:59").getTime();
-      const diff = expiry - now;
-      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      setTimeLeft({ d, h, m });
-    }, 60000);
-    return () => clearInterval(timer);
+      const distance = expiryDate - now;
+
+      if (distance < 0) {
+        clearInterval(interval);
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      } else {
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        setTimeLeft({ days, hours, minutes, seconds });
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
-    <motion.div variants={itemVariants} whileHover={{ y: -5, scale: 1.02 }} className={`bg-[#12121a]/40 backdrop-blur-md border rounded-xl p-5 transition-all duration-300 group relative overflow-hidden ${highlighted ? 'border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.2)] ring-1 ring-cyan-400' : 'border-white/10 hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(34,211,238,0.15)]'}`}>
+    <motion.div variants={itemVariants} whileHover={{ y: -5, scale: 1.02 }} className={`bg-[#12121a]/40 backdrop-blur-md border rounded-xl p-5 transition-all duration-300 group relative overflow-visible mt-6 ${highlighted ? 'border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.2)] ring-1 ring-cyan-400' : 'border-white/10 hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(34,211,238,0.15)]'}`}>
       
-      {/* --- NEW BOXED COUNTDOWN --- */}
-      <div className="absolute top-0 right-0 bg-red-900/40 backdrop-blur-md border-l border-b border-red-500/30 rounded-bl-xl z-20 flex items-center gap-2 px-3 py-1.5 shadow-[0_0_15px_rgba(239,68,68,0.4)]">
-        <span className="text-[10px] text-red-300 font-bold tracking-wider mr-1 flex items-center gap-1">
-           <Clock size={10} className="animate-pulse" /> ENDS IN:
-        </span>
-        <div className="flex gap-1">
-          <div className="bg-black/60 border border-red-500/50 rounded px-1.5 py-0.5 min-w-[20px] text-center">
-            <span className="text-white text-[10px] font-mono font-bold">{timeLeft.d}d</span>
-          </div>
-          <div className="bg-black/60 border border-red-500/50 rounded px-1.5 py-0.5 min-w-[20px] text-center">
-            <span className="text-white text-[10px] font-mono font-bold">{timeLeft.h}h</span>
-          </div>
-          <div className="bg-black/60 border border-red-500/50 rounded px-1.5 py-0.5 min-w-[20px] text-center">
-            <span className="text-white text-[10px] font-mono font-bold">{timeLeft.m}m</span>
-          </div>
+      {/* --- FLOATING NEON GREEN COUNTDOWN BOX --- */}
+      <div className="absolute -top-6 -right-2 z-30 flex flex-col items-end">
+        <div className="bg-black/90 border border-green-500 shadow-[0_0_15px_rgba(34,197,94,0.6)] px-2 py-1.5 rounded-lg flex items-center gap-2 transform rotate-1 backdrop-blur-xl">
+           <Timer size={14} className="text-green-400 animate-spin-slow" />
+           <div className="flex gap-1 items-center">
+             <div className="flex flex-col items-center">
+                <div className="bg-[#0f2a15] border border-green-500/50 rounded px-1.5 min-w-[22px] text-center shadow-inner">
+                  <span className="text-green-400 text-xs font-mono font-bold tracking-widest">{String(timeLeft.days).padStart(2, '0')}</span>
+                </div>
+                <span className="text-[6px] text-green-500/80 uppercase mt-0.5">Days</span>
+             </div>
+             <span className="text-green-500 font-bold -mt-2">:</span>
+             <div className="flex flex-col items-center">
+                <div className="bg-[#0f2a15] border border-green-500/50 rounded px-1.5 min-w-[22px] text-center shadow-inner">
+                  <span className="text-green-400 text-xs font-mono font-bold tracking-widest">{String(timeLeft.hours).padStart(2, '0')}</span>
+                </div>
+                <span className="text-[6px] text-green-500/80 uppercase mt-0.5">Hrs</span>
+             </div>
+             <span className="text-green-500 font-bold -mt-2">:</span>
+             <div className="flex flex-col items-center">
+                <div className="bg-[#0f2a15] border border-green-500/50 rounded px-1.5 min-w-[22px] text-center shadow-inner">
+                  <span className="text-green-400 text-xs font-mono font-bold tracking-widest">{String(timeLeft.minutes).padStart(2, '0')}</span>
+                </div>
+                <span className="text-[6px] text-green-500/80 uppercase mt-0.5">Min</span>
+             </div>
+             <span className="text-green-500 font-bold -mt-2">:</span>
+             <div className="flex flex-col items-center">
+                <div className="bg-[#0f2a15] border border-green-500/50 rounded px-1.5 min-w-[22px] text-center shadow-inner">
+                  <span className="text-green-400 text-xs font-mono font-bold tracking-widest animate-pulse">{String(timeLeft.seconds).padStart(2, '0')}</span>
+                </div>
+                <span className="text-[6px] text-green-500/80 uppercase mt-0.5">Sec</span>
+             </div>
+           </div>
         </div>
       </div>
       
-      {highlighted && (<div className="absolute top-10 right-0 bg-cyan-400 text-black text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tl-lg z-20 flex items-center gap-1 shadow-lg mt-2"><Sparkles size={10} /> AI PICK</div>)}
+      {highlighted && (<div className="absolute top-0 left-0 bg-cyan-400 text-black text-[10px] font-bold px-3 py-1 rounded-br-lg rounded-tl-xl z-20 flex items-center gap-1 shadow-lg"><Sparkles size={10} /> AI PICK</div>)}
+      
       <div className={`absolute top-0 right-0 w-20 h-20 blur-2xl rounded-full -translate-y-1/2 translate-x-1/2 transition-colors duration-500 ${highlighted ? 'bg-cyan-500/30' : 'bg-cyan-500/10 group-hover:bg-cyan-500/20'}`}></div>
-      <div className="flex justify-between items-start mb-4 relative z-10"><div><div className="flex items-center gap-2 mb-1"><Globe size={18} className="text-purple-400 group-hover:text-purple-300 transition-colors" /><h3 className="font-bold text-lg text-white group-hover:text-cyan-200 transition-colors">{config.location}</h3></div><span className="text-xs bg-white/5 px-2 py-1 rounded text-cyan-300 font-mono border border-cyan-500/20">{config.protocol}</span></div><div className="text-right"><div className="flex items-center gap-1 justify-end text-green-400 text-sm font-bold"><Activity size={14} className="animate-pulse" /><span>{config.ping}</span></div><p className="text-xs text-gray-500 mt-1">{config.updated}</p></div></div>
+      <div className="flex justify-between items-start mb-4 relative z-10 pt-2"><div><div className="flex items-center gap-2 mb-1"><Globe size={18} className="text-purple-400 group-hover:text-purple-300 transition-colors" /><h3 className="font-bold text-lg text-white group-hover:text-cyan-200 transition-colors">{config.location}</h3></div><span className="text-xs bg-white/5 px-2 py-1 rounded text-cyan-300 font-mono border border-cyan-500/20">{config.protocol}</span></div><div className="text-right"><div className="flex items-center gap-1 justify-end text-green-400 text-sm font-bold"><Activity size={14} className="animate-pulse" /><span>{config.ping}</span></div><p className="text-xs text-gray-500 mt-1">{config.updated}</p></div></div>
       <div className="bg-black/40 p-3 rounded mb-4 font-mono text-xs text-gray-400 truncate border border-white/5 group-hover:border-white/10 transition-colors">{config.code}</div>
       <button onClick={handleCopy} className={`w-full py-2.5 rounded-lg font-bold flex items-center justify-center gap-2 transition-all duration-200 active:scale-95 ${copied ? 'bg-green-500/20 text-green-400 border border-green-500/50' : highlighted ? 'bg-cyan-400 text-black border border-cyan-400 hover:bg-cyan-300 shadow-lg shadow-cyan-400/20' : 'bg-cyan-400/10 text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400 hover:text-black hover:shadow-[0_0_15px_rgba(34,211,238,0.4)]'}`}>{copied ? <><Check size={18} /> Copied</> : <><Copy size={18} /> Copy Config</>}</button>
     </motion.div>
