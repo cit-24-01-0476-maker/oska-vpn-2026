@@ -30,35 +30,37 @@ const FREE_CONFIGS = [
 const PACKAGES = [
   { 
     id: "router", 
-    name: "Router Packages", 
+    name: "Router Package", 
     price: "Rs. 300", 
     period: "/ 30 Days", 
     data: "100 GB", 
-    unlimitedPrice: "Rs. 800",
-    features: ["Dialog ZOOM (Router)", "SLT Router ZOOM", "SLT Router Netflix", "High Speed SG Server 🇸🇬", "Best for Home Use"], 
-    color: "from-cyan-400 to-blue-600", 
+    unlimited: "Unlimited GB = Rs. 800",
+    features: ["Dialog ZOOM (Router)", "SLT Router ZOOM", "SLT Router Netflix", "High Speed V2Ray"], 
+    popular: false, 
+    color: "from-cyan-400 to-cyan-600", 
     icon: RouterIcon 
   },
   { 
     id: "fiber", 
-    name: "Fiber Packages", 
+    name: "Fiber Package", 
     price: "Rs. 300", 
     period: "/ 30 Days", 
     data: "100 GB", 
-    unlimitedPrice: "Rs. 800",
-    features: ["SLT Fiber ZOOM", "SLT Fiber Netflix", "Ultra Low Ping (Gaming)", "High Speed SG Server 🇸🇬", "Best for Fiber Users"], 
-    color: "from-purple-400 to-indigo-600", 
+    unlimited: "Unlimited GB = Rs. 800",
+    features: ["SLT Fiber ZOOM", "SLT Fiber Netflix", "Ultra Low Ping", "Gaming Optimized"], 
+    popular: false, 
+    color: "from-purple-400 to-purple-600", 
     icon: Wifi 
   },
   { 
     id: "mobile", 
-    name: "Mobile SIM Packages", 
+    name: "Mobile SIM Package", 
     price: "Rs. 200", 
     period: "/ 30 Days", 
     data: "100 GB", 
-    unlimitedPrice: "Rs. 400",
-    features: ["Dialog 547 / 797 / ZOOM", "Hutch Social Media", "Airtel ZOOM / TikTok / 260", "Any Mobile SIM Support", "Stable Connection"], 
-    popular: true,
+    unlimited: "Unlimited GB = Rs. 400",
+    features: ["Dialog 547 / 797 & Zoom", "Hutch Social", "Airtel Zoom/TikTok/260", "Any Mobile SIM"], 
+    popular: true, 
     color: "from-orange-400 to-red-600", 
     icon: Smartphone 
   }
@@ -75,215 +77,265 @@ const PROVIDER_PACKAGES = [
 const ADMIN_PHONE = "94754565755";
 
 // --- ANIMATION VARIANTS ---
-const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
-const itemVariants = { hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100 } } };
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
 
-// --- LIVE BACKGROUND ---
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100 } }
+};
+
+// --- LIVE BACKGROUND COMPONENT (DIGITAL RAIN) ---
 const LiveBackground = () => {
   const canvasRef = useRef(null);
+
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
-    window.addEventListener('resize', resize); resize();
-    const alphabet = '0123456789ABCDEF';
+    
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼدهペオォコソトノホモヨョロヲゴゾドボポヴッン';
+    const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const nums = '0123456789';
+    const alphabet = katakana + latin + nums;
+
     const fontSize = 16;
     const columns = canvas.width / fontSize;
-    const drops = Array(Math.floor(columns)).fill(1);
+
+    const rainDrops = [];
+    for (let x = 0; x < columns; x++) {
+      rainDrops[x] = 1;
+    }
+
     const draw = () => {
-      ctx.fillStyle = 'rgba(10, 10, 15, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'rgba(10, 10, 15, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
       ctx.font = fontSize + 'px monospace';
-      for(let i=0; i<drops.length; i++) {
-        const text = alphabet.charAt(Math.floor(Math.random()*alphabet.length));
-        ctx.fillStyle = Math.random() > 0.5 ? '#22d3ee' : '#a855f7';
-        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-        if(drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-        drops[i]++;
+
+      for (let i = 0; i < rainDrops.length; i++) {
+        const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+        
+        const isCyan = Math.random() > 0.5;
+        ctx.fillStyle = isCyan ? '#22d3ee' : '#a855f7';
+        
+        if (Math.random() > 0.98) {
+           ctx.shadowBlur = 10;
+           ctx.shadowColor = isCyan ? '#22d3ee' : '#a855f7';
+           ctx.fillStyle = '#ffffff'; 
+        } else {
+           ctx.shadowBlur = 0;
+        }
+
+        ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+        if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          rainDrops[i] = 0;
+        }
+        rainDrops[i]++;
       }
     };
+
     const interval = setInterval(draw, 30);
-    return () => { clearInterval(interval); window.removeEventListener('resize', resize); };
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('resize', resizeCanvas);
+    };
   }, []);
+
   return (
     <div className="fixed inset-0 z-0 pointer-events-none bg-[#0a0a0f]">
-      <canvas ref={canvasRef} className="absolute inset-0 block opacity-20" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)]"></div>
+      <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1], rotate: [0, 90, 0] }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-purple-900/20 rounded-full blur-[120px]" />
+      <motion.div animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.2, 0.1], x: [0, 100, 0] }} transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }} className="absolute bottom-[-20%] right-[-10%] w-[700px] h-[700px] bg-cyan-900/20 rounded-full blur-[120px]" />
+      <canvas ref={canvasRef} className="absolute inset-0 block opacity-25" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)] pointer-events-none"></div>
     </div>
   );
 };
 
-// --- AI CHAT ---
+// --- AI COMPONENTS ---
+
 const AIChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([{ role: 'model', text: 'Initiating System... I am OSKA AI. How can I help?' }]);
+  const [messages, setMessages] = useState([{ role: 'model', text: 'Initiating System... I am OSKA AI. How can I assist with your secure connection today?' }]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  useEffect(() => scrollToBottom(), [messages, isOpen]);
+
   const handleSend = async () => {
     if (!input.trim()) return;
-    const userMsg = { role: 'user', text: input };
-    setMessages(prev => [...prev, userMsg]); setInput(''); setLoading(true);
+    const userMessage = { role: 'user', text: input };
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setLoading(true);
+
     try {
       const apiKey = "AIzaSyDIPcbkvqZbJOy7pnQzt47EeeH6JpNII5w";
-      const sys = `You are OSKA VPN AI. Pricing: Mobile SIM 100GB (Rs.200), Unlimited (Rs.400). Router/Fiber 100GB (Rs.300), Unlimited (Rs.800). All 30 days.`;
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ contents: [{ parts: [{ text: input }] }], systemInstruction: { parts: [{ text: sys }] } }) });
-      const d = await res.json();
-      setMessages(prev => [...prev, { role: 'model', text: d.candidates?.[0]?.content?.parts?.[0]?.text || "Link Error." }]);
-    } catch { setMessages(prev => [...prev, { role: 'model', text: "Error." }]); } finally { setLoading(false); }
+      const systemPrompt = `You are OSKA VPN AI. NEW PRICES: Mobile SIM 100GB-Rs200, Unlimited-Rs400. Router/Fiber 100GB-Rs300, Unlimited-Rs800.`;
+      
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: input }] }], systemInstruction: { parts: [{ text: systemPrompt }] } }) });
+      const data = await response.json();
+      const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Link Error.";
+      setMessages(prev => [...prev, { role: 'model', text: aiText }]);
+    } catch (error) { setMessages(prev => [...prev, { role: 'model', text: "Error." }]); } finally { setLoading(false); }
   };
+
   return (
     <>
-      <button onClick={() => setIsOpen(!isOpen)} className="fixed bottom-6 right-6 z-50 p-4 bg-cyan-500 rounded-full shadow-lg text-black hover:scale-110 transition-all">{isOpen ? <X /> : <Sparkles />}</button>
-      {isOpen && (
-        <div className="fixed bottom-24 right-6 z-50 w-80 md:w-96 bg-[#0a0a0f] border border-cyan-500/30 rounded-2xl h-[450px] flex flex-col shadow-2xl overflow-hidden backdrop-blur-xl">
-           <div className="p-4 bg-cyan-900/20 border-b border-white/5 font-bold flex items-center gap-2"><Bot size={18} className="text-cyan-400"/> OSKA AI SUPPORT</div>
-           <div className="flex-1 overflow-y-auto p-4 space-y-3">{messages.map((m,i)=>(<div key={i} className={`flex ${m.role==='user'?'justify-end':'justify-start'}`}><div className={`p-2 rounded-lg text-sm max-w-[80%] ${m.role==='user'?'bg-cyan-500 text-black':'bg-white/5 text-gray-300'}`}>{m.text}</div></div>))}</div>
-           <div className="p-3 border-t border-white/5 flex gap-2"><input value={input} onChange={e=>setInput(e.target.value)} onKeyPress={e=>e.key==='Enter'&&handleSend()} className="flex-1 bg-black/50 border border-white/10 rounded-lg px-3 py-1 text-sm outline-none"/><button onClick={handleSend} className="text-cyan-400 p-2"><Send size={18}/></button></div>
-        </div>
-      )}
+      <motion.button whileHover={{ scale: 1.1, rotate: 180 }} whileTap={{ scale: 0.9 }} onClick={() => setIsOpen(!isOpen)} className="fixed bottom-6 right-6 z-50 p-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full shadow-[0_0_20px_rgba(6,182,212,0.6)] border border-white/20 text-white hover:shadow-cyan-500/50 transition-all">{isOpen ? <X size={24} /> : <Sparkles size={24} />}</motion.button>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div initial={{ opacity: 0, y: 50, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 50, scale: 0.9 }} className="fixed bottom-24 right-6 z-50 w-[90vw] md:w-96 bg-[#0a0a0f]/95 backdrop-blur-xl border border-cyan-500/50 rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col h-[500px]">
+            <div className="bg-gradient-to-r from-cyan-900/40 to-blue-900/40 p-4 border-b border-cyan-500/30 flex items-center gap-2"><Bot size={20} className="text-cyan-400" /><div><h3 className="text-white font-bold text-sm tracking-wider">OSKA CYBER AI</h3></div></div>
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">{messages.map((msg, idx) => (<div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}><div className={`max-w-[85%] p-3 rounded-lg text-sm ${msg.role === 'user' ? 'bg-cyan-600/20 text-cyan-100 border border-cyan-500/30' : 'bg-[#1a1a24] text-gray-300'}`}>{msg.text}</div></div>))}{loading && (<div className="flex justify-start text-cyan-400">...</div>)}<div ref={messagesEndRef} /></div>
+            <div className="p-4 bg-[#12121a]/80 border-t border-white/10 flex gap-2"><input type="text" value={input} onChange={(e) => setInput(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && handleSend()} className="flex-1 bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none" /><button onClick={handleSend} className="p-2 text-cyan-400"><Send size={18} /></button></div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };
 
-// --- COMPONENTS ---
+// --- NAVBAR ---
 const Navbar = ({ activeTab, setActiveTab }) => {
-  const menu = [{id:'home',l:'Home'},{id:'free',l:'Free Configs'},{id:'pricing',l:'Premium Store'},{id:'tutorials',l:'Tutorials'}];
+  const [isOpen, setIsOpen] = useState(false);
+  const menuItems = [{ id: 'home', label: 'Home' }, { id: 'free', label: 'Free Configs' }, { id: 'pricing', label: 'Premium Store' }, { id: 'tutorials', label: 'Tutorials' }];
   return (
-    <nav className="fixed top-0 inset-x-0 h-16 z-50 bg-[#0a0a0f]/80 border-b border-white/5 backdrop-blur-md flex items-center justify-between px-6">
-      <div className="flex items-center gap-2 font-bold text-xl cursor-pointer" onClick={()=>setActiveTab('home')}><Shield className="text-cyan-400"/> OSKA<span className="text-cyan-400">VPN</span></div>
-      <div className="hidden md:flex gap-6">{menu.map(m=>(<button key={m.id} onClick={()=>setActiveTab(m.id)} className={`text-sm ${activeTab===m.id?'text-cyan-400 font-bold':'text-gray-400'}`}>{m.l}</button>))}</div>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/80 backdrop-blur-xl border-b border-white/5 h-16">
+      <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => setActiveTab('home')}><Shield className="w-8 h-8 text-cyan-400" /><span className="text-2xl font-bold tracking-wider text-white">OSKA<span className="text-cyan-400">VPN</span></span></div>
+        <div className="hidden md:flex space-x-8">{menuItems.map((item) => (<button key={item.id} onClick={() => setActiveTab(item.id)} className={`text-sm font-medium transition-all ${activeTab === item.id ? 'text-cyan-400' : 'text-gray-400'}`}>{item.label}</button>))}</div>
+        <div className="md:hidden"><button onClick={() => setIsOpen(!isOpen)} className="text-gray-400">{isOpen ? <X size={24} /> : <Menu size={24} />}</button></div>
+      </div>
     </nav>
   );
 };
 
-const ConfigCard = ({ config, highlighted }) => {
-  const [copied, setCopied] = useState(false);
-  const copy = () => { navigator.clipboard.writeText(config.code); setCopied(true); setTimeout(()=>setCopied(false),2000); };
+// --- VIEWS ---
+
+const HomeView = ({ setTab }) => (
+  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] w-full text-center px-4 relative pt-10 pb-10">
+    <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
+      <h1 className="text-5xl md:text-8xl font-extrabold mb-6 text-white leading-tight">UNLEASH <span className="text-cyan-400">ULTIMATE</span> FREEDOM</h1>
+      <p className="text-lg text-gray-400 mb-10 max-w-2xl">Gaming, Streaming, and Browsing with 0% Lag.</p>
+      <div className="flex gap-4">
+        <button onClick={() => setTab('free')} className="px-8 py-4 rounded-full bg-white/5 border border-white/10 text-white font-bold">Get Free Configs</button>
+        <button onClick={() => setTab('pricing')} className="px-8 py-4 rounded-full bg-cyan-500 text-black font-bold">Buy Premium</button>
+      </div>
+      <div className="mt-12 flex flex-col md:flex-row gap-6 w-full max-w-2xl px-4">
+        <a href="https://chat.whatsapp.com/LUE12DSAPkkK5Z9wirTV7n" target="_blank" className="flex-1 flex items-center gap-3 bg-[#25D366]/10 border border-[#25D366]/50 p-4 rounded-xl"><WhatsAppIcon className="w-8 h-8 text-[#25D366]" /><div className="text-left"><h3 className="text-white font-bold">Main Group</h3></div></a>
+        <a href="https://chat.whatsapp.com/DAXjobEWqxs16rXFH3fk7L" target="_blank" className="flex-1 flex items-center gap-3 bg-[#25D366]/10 border border-[#25D366]/50 p-4 rounded-xl"><WhatsAppIcon className="w-8 h-8 text-[#25D366]" /><div className="text-left"><h3 className="text-white font-bold">Chat Group</h3></div></a>
+      </div>
+    </div>
+  </motion.div>
+);
+
+const FreeView = () => (
+  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-20 px-4 max-w-6xl mx-auto min-h-screen">
+    <h1 className="text-3xl font-bold text-white mb-10">Free V2Ray Configs</h1>
+    <div className="grid md:grid-cols-3 gap-6">
+      {FREE_CONFIGS.map(c => (
+        <div key={c.id} className="bg-[#12121a]/60 border border-white/10 p-5 rounded-xl">
+          <h3 className="font-bold text-white mb-2">{c.location}</h3>
+          <p className="text-xs text-gray-500 truncate mb-4">{c.code}</p>
+          <button onClick={() => {navigator.clipboard.writeText(c.code); alert('Copied!');}} className="w-full py-2 bg-cyan-500 text-black font-bold rounded-lg">Copy Config</button>
+        </div>
+      ))}
+    </div>
+  </motion.div>
+);
+
+const PricingView = () => {
+  const [selectedPkg, setSelectedPkg] = useState(null);
   return (
-    <motion.div variants={itemVariants} className={`p-5 rounded-2xl border bg-[#12121a]/60 backdrop-blur-md transition-all ${highlighted?'border-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.2)]':'border-white/10'}`}>
-      <div className="flex justify-between items-start mb-3"><div><h3 className="font-bold text-white flex items-center gap-2"><Globe size={16} className="text-cyan-400"/> {config.location}</h3><p className="text-[10px] text-cyan-400/70 font-mono">{config.protocol}</p></div><div className="text-right text-green-400 text-xs font-bold flex items-center gap-1"><Activity size={12}/>{config.ping}</div></div>
-      <div className="bg-black/40 p-2 rounded text-[10px] text-gray-500 truncate mb-4 border border-white/5">{config.code}</div>
-      <button onClick={copy} className={`w-full py-2 rounded-lg text-sm font-bold flex items-center justify-center gap-2 transition-all ${copied?'bg-green-500/20 text-green-400 border border-green-500/50':'bg-cyan-500 text-black'}`}>{copied?<Check size={16}/>:<Copy size={16}/>} {copied?'Copied':'Copy Config'}</button>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-20 px-4 max-w-7xl mx-auto min-h-screen">
+      <div className="text-center mb-16"><h1 className="text-4xl font-bold text-white">Premium Store</h1></div>
+      
+      <div className="grid md:grid-cols-3 gap-8 mb-20">
+        {PACKAGES.map((pkg) => (
+          <motion.div key={pkg.id} whileHover={{ y: -5 }} className={`bg-[#12121a]/80 border ${pkg.popular ? 'border-orange-500 shadow-lg shadow-orange-500/10' : 'border-white/10'} rounded-3xl p-8 flex flex-col relative overflow-hidden`}>
+            {pkg.popular && <span className="absolute top-0 right-0 bg-orange-500 text-black text-[10px] font-bold px-3 py-1 rounded-bl-xl">POPULAR</span>}
+            <div className={`p-4 rounded-2xl bg-gradient-to-br ${pkg.color} w-fit mb-6`}><pkg.icon className="text-white w-8 h-8" /></div>
+            <h3 className="text-2xl font-bold text-white mb-2">{pkg.name}</h3>
+            
+            {/* PRICE OPTIONS BOXES */}
+            <div className="space-y-4 mb-8">
+              <div className="p-4 rounded-xl bg-white/5 border border-white/5">
+                <div className="flex justify-between items-center"><span className="text-gray-400">Standard</span><span className="text-white font-bold">{pkg.data}</span></div>
+                <div className="text-2xl font-black text-cyan-400 mt-1">{pkg.price}</div>
+              </div>
+              <div className="p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+                <div className="flex justify-between items-center"><span className="text-cyan-400 font-bold">Unlimited</span><span className="text-white">♾️</span></div>
+                <div className="text-2xl font-black text-cyan-400 mt-1">{pkg.unlimited.split('=')[1].trim()}</div>
+              </div>
+            </div>
+
+            <ul className="space-y-3 mb-8 flex-1">{pkg.features.map((f, i) => (<li key={i} className="flex items-center gap-2 text-sm text-gray-400"><CheckCircle size={14} className="text-cyan-400" />{f}</li>))}</ul>
+            <button onClick={() => setSelectedPkg(pkg)} className="w-full py-4 bg-white text-black font-bold rounded-2xl hover:bg-cyan-500 transition-colors">Order Now</button>
+          </motion.div>
+        ))}
+      </div>
+
+      <div className="grid md:grid-cols-5 gap-4">
+        {PROVIDER_PACKAGES.map(p => (
+          <div key={p.id} className="bg-white/5 p-4 rounded-2xl border border-white/5 text-center">
+            <h3 className="font-bold text-white">{p.name}</h3>
+            <div className="text-[10px] text-gray-500 mt-2 space-y-1">{p.items.map((it, i) => <div key={i}>{it}</div>)}</div>
+          </div>
+        ))}
+      </div>
+
+      {selectedPkg && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4">
+          <div className="bg-[#16161f] border border-white/10 p-6 rounded-3xl w-full max-w-sm">
+            <h2 className="text-xl font-bold mb-4">Confirm Order</h2>
+            <p className="text-gray-400 text-sm mb-6">Contact Admin via WhatsApp to get your login.</p>
+            <button onClick={() => {window.open(`https://wa.me/${ADMIN_PHONE}?text=I want to buy ${selectedPkg.name}`, '_blank'); setSelectedPkg(null);}} className="w-full bg-green-500 text-black font-bold py-3 rounded-xl flex items-center justify-center gap-2"><MessageCircle size={18} /> WhatsApp</button>
+            <button onClick={() => setSelectedPkg(null)} className="w-full mt-2 text-gray-500 text-sm">Cancel</button>
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 };
 
-const PricingCard = ({ pkg, onOrder }) => (
-  <motion.div variants={itemVariants} className={`p-8 rounded-3xl border bg-[#12121a]/80 backdrop-blur-md flex flex-col relative overflow-hidden group transition-all hover:scale-[1.02] ${pkg.popular ? 'border-orange-500 shadow-[0_0_30px_rgba(249,115,22,0.1)]' : 'border-white/10 hover:border-cyan-500/30'}`}>
-    {pkg.popular && <div className="absolute top-0 right-0 bg-orange-500 text-black text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-lg">MOST POPULAR</div>}
-    <div className={`p-4 rounded-2xl bg-gradient-to-br ${pkg.color} w-fit mb-6 shadow-lg group-hover:scale-110 transition-transform`}><pkg.icon className="text-white w-8 h-8"/></div>
-    <h3 className="text-2xl font-bold text-white mb-2">{pkg.name}</h3>
-    
-    <div className="space-y-4 mb-8">
-      <div className="p-4 rounded-2xl bg-white/5 border border-white/5">
-         <p className="text-gray-400 text-xs mb-1">Standard Option</p>
-         <div className="flex justify-between items-end">
-            <span className="text-white font-bold">{pkg.data}</span>
-            <span className="text-cyan-400 font-extrabold text-2xl">{pkg.price}</span>
-         </div>
-      </div>
-      <div className="p-4 rounded-2xl bg-cyan-500/10 border border-cyan-500/20">
-         <p className="text-cyan-400 text-xs mb-1 font-bold">Recommended Option</p>
-         <div className="flex justify-between items-end">
-            <span className="text-white font-bold">♾️ Unlimited GB</span>
-            <span className="text-cyan-400 font-extrabold text-2xl">{pkg.unlimitedPrice}</span>
-         </div>
-      </div>
-    </div>
-
-    <ul className="space-y-3 mb-8 flex-1">{pkg.features.map((f,i)=>(<li key={i} className="flex items-center gap-3 text-sm text-gray-400"><CheckCircle size={14} className="text-cyan-400"/> {f}</li>))}</ul>
-    
-    <button onClick={()=>onOrder(pkg)} className={`w-full py-4 rounded-2xl font-bold transition-all shadow-lg ${pkg.popular ? 'bg-orange-500 text-black hover:bg-orange-400' : 'bg-white text-black hover:bg-cyan-400'}`}>Order Now</button>
-  </motion.div>
-);
-
-const OrderModal = ({ pkg, onClose }) => {
-  const [name, setName] = useState('');
-  const [opt, setOpt] = useState('100GB');
-  const send = (e) => {
-    e.preventDefault();
-    const price = opt === '100GB' ? pkg.price : pkg.unlimitedPrice;
-    const text = `*NEW ORDER - OSKA VPN*\n\n📦 *Package:* ${pkg.name}\n📊 *Option:* ${opt}\n💰 *Price:* ${price}\n👤 *Name:* ${name}\n\nI want to buy this package.`;
-    window.open(`https://wa.me/${ADMIN_PHONE}?text=${encodeURIComponent(text)}`, '_blank');
-    onClose();
-  };
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-in fade-in">
-       <motion.div initial={{scale:0.9}} animate={{scale:1}} className="bg-[#16161f] border border-white/10 p-6 rounded-3xl w-full max-w-sm">
-          <div className="flex justify-between mb-6"><h2 className="text-xl font-bold">Select Plan</h2><button onClick={onClose}><X/></button></div>
-          <form onSubmit={send} className="space-y-4">
-             <input required placeholder="Your Name" value={name} onChange={e=>setName(e.target.value)} className="w-full bg-white/5 border border-white/10 p-3 rounded-xl outline-none focus:border-cyan-400"/>
-             <select value={opt} onChange={e=>setOpt(e.target.value)} className="w-full bg-white/5 border border-white/10 p-3 rounded-xl outline-none">
-                <option value="100GB">{pkg.data} - {pkg.price}</option>
-                <option value="Unlimited">Unlimited GB - {pkg.unlimitedPrice}</option>
-             </select>
-             <button type="submit" className="w-full bg-green-500 text-black font-bold py-3 rounded-xl flex items-center justify-center gap-2"><MessageCircle size={18}/> WhatsApp Checkout</button>
-          </form>
-       </motion.div>
-    </div>
-  );
-};
-
-// --- VIEWS ---
-const HomeView = ({ setTab }) => (
-  <div className="min-h-screen flex flex-col items-center justify-center px-4 pt-20">
-     <motion.h1 initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} className="text-6xl md:text-8xl font-black text-center mb-6 leading-none">OSKA <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">CYBER</span></motion.h1>
-     <p className="text-gray-400 text-center max-w-xl mb-10">Experience the fastest V2Ray VPN network in Sri Lanka. Gaming optimized, secure and unlimited browsing.</p>
-     <div className="flex gap-4"><button onClick={()=>setTab('free')} className="px-8 py-3 bg-white/5 border border-white/10 rounded-full font-bold">Free Configs</button><button onClick={()=>setTab('pricing')} className="px-8 py-3 bg-cyan-500 text-black rounded-full font-bold shadow-lg shadow-cyan-500/20">Buy Premium</button></div>
-  </div>
-);
-
-const FreeView = () => (
-  <div className="pt-24 px-6 max-w-6xl mx-auto min-h-screen pb-20">
-     <h1 className="text-3xl font-bold mb-8">Free Configs</h1>
-     <div className="grid md:grid-cols-3 gap-6">{FREE_CONFIGS.map(c=>(<ConfigCard key={c.id} config={c}/>))}</div>
-  </div>
-);
-
-const PricingView = () => {
-  const [selected, setSelected] = useState(null);
-  return (
-    <div className="pt-24 px-6 max-w-6xl mx-auto min-h-screen pb-20">
-       <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-black mb-4">Premium Store</h1>
-          <p className="text-gray-500">Choose your 30-day package and get instant access.</p>
-       </div>
-       <div className="grid md:grid-cols-3 gap-8 mb-20">
-          {PACKAGES.map(p=>(<PricingCard key={p.id} pkg={p} onOrder={setSelected}/>))}
-       </div>
-       <h2 className="text-2xl font-bold mb-8 text-center flex items-center justify-center gap-3"><Box className="text-cyan-400"/> Supporting Networks</h2>
-       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          {PROVIDER_PACKAGES.map(pr=>(<div key={pr.id} className="p-4 rounded-2xl bg-white/5 border border-white/5 text-center"><div className={`w-10 h-10 rounded-full bg-gradient-to-br ${pr.color} mx-auto mb-3 flex items-center justify-center font-bold`}>{pr.name[0]}</div><h3 className="text-sm font-bold">{pr.name}</h3></div>))}
-       </div>
-       {selected && <OrderModal pkg={selected} onClose={()=>setSelected(null)}/>}
-    </div>
-  );
-};
-
 const TutorialsView = () => (
-  <div className="pt-24 px-6 max-w-4xl mx-auto min-h-screen pb-20">
-     <h1 className="text-3xl font-bold mb-10">How to Setup</h1>
-     <div className="space-y-6">
-        <div className="p-6 bg-[#12121a] rounded-3xl border border-white/5"><h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-green-400"><Smartphone/> Android (v2rayNG)</h3><p className="text-gray-400">1. Download v2rayNG from PlayStore.<br/>2. Copy a config from this site.<br/>3. Open app, click + and 'Import from Clipboard'.<br/>4. Connect.</p></div>
-        <div className="p-6 bg-[#12121a] rounded-3xl border border-white/5"><h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-blue-400"><Smartphone/> iOS (Shadowrocket)</h3><p className="text-gray-400">1. Install Shadowrocket.<br/>2. Copy config and open the app.<br/>3. It will auto-detect the config.<br/>4. Turn on connection.</p></div>
-     </div>
-  </div>
+  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-20 px-4 max-w-4xl mx-auto min-h-screen">
+    <h1 className="text-3xl font-bold text-white mb-10">Tutorials</h1>
+    <div className="space-y-6">
+      <div className="p-6 bg-white/5 border border-white/10 rounded-2xl"><h3 className="font-bold text-green-400 mb-2">Android</h3><p className="text-gray-400 text-sm">Download v2rayNG from Play Store.</p></div>
+      <div className="p-6 bg-white/5 border border-white/10 rounded-2xl"><h3 className="font-bold text-blue-400 mb-2">iOS</h3><p className="text-gray-400 text-sm">Download Shadowrocket or FairVPN.</p></div>
+    </div>
+  </motion.div>
 );
 
 // --- MAIN APP ---
 export default function App() {
-  const [tab, setTab] = useState('home');
+  const [activeTab, setActiveTab] = useState('home');
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-gray-100 font-sans selection:bg-cyan-400 selection:text-black">
+    <div className="min-h-screen bg-[#0a0a0f] text-gray-100 selection:bg-cyan-400 selection:text-black">
       <LiveBackground />
-      <Navbar activeTab={tab} setActiveTab={setTab} />
-      <AnimatePresence mode="wait">
-        {tab === 'home' && <HomeView key="h" setTab={setTab}/>}
-        {tab === 'free' && <FreeView key="f"/>}
-        {tab === 'pricing' && <PricingView key="p"/>}
-        {tab === 'tutorials' && <TutorialsView key="t"/>}
-      </AnimatePresence>
+      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <main className="relative z-10"><AnimatePresence mode="wait">
+        {activeTab === 'home' && <HomeView key="h" setTab={setActiveTab} />}
+        {activeTab === 'free' && <FreeView key="f" />}
+        {activeTab === 'pricing' && <PricingView key="p" />}
+        {activeTab === 'tutorials' && <TutorialsView key="t" />}
+      </AnimatePresence></main>
       <AIChatWidget />
-      <footer className="py-10 text-center text-gray-600 text-xs border-t border-white/5 backdrop-blur-md">© 2026 OSKA VPN. Sri Lanka's Elite V2Ray Network 🇱🇰</footer>
     </div>
   );
 }
