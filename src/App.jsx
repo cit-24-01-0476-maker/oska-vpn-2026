@@ -4,7 +4,7 @@ import {
   Smartphone, Activity, RefreshCw, MessageCircle, 
   CheckCircle, Server, Lock, Bot, Send, Sparkles, 
   Wifi, Router as RouterIcon, Wand2, AlertTriangle, Stethoscope, BrainCircuit, Box, ArrowRight,
-  Newspaper, Radio
+  Newspaper, Radio, Clock, Bell
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -18,9 +18,9 @@ const WhatsAppIcon = ({ className }) => (
 // --- DATA CONFIGURATION ---
 
 const FREE_CONFIGS = [
-  { id: 1, location: "Dialog Zoom 🇸🇬", protocol: "VLESS", speed: "High", ping: "42ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=aka.ms&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" },
-  { id: 2, location: "SLT Zoom 🇸🇬", protocol: "VLESS", speed: "Ultra", ping: "35ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=zoom.us&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" },
-  { id: 3, location: "SLT Netflix 🇸🇬", protocol: "VLESS", speed: "High", ping: "38ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=netflix.com&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" },
+  { id: 1, location: "SLT Netflix 🇸🇬", protocol: "Trojan", speed: "Ultra", ping: "28ms", updated: "Just now", code: "nm-trojan://6fTISs8DA8cRHqVc4nlIX/24aemt45b7QG+QI8Zsi4ZjNdm2uFzFTaaz9pijBBQNuDJmzYhtfb/wNyCUp9v0mfgkbLVqaRqZQoYF+ej3EGBtmtN+GZevtLz9i6u8Vf/GeAwQbL2ms3FYvcqLbKrmJCyYpt06WdC4UR2zMPmSy1ec4uW7IkquvggdMs9VdNZm" },
+  { id: 2, location: "Dialog Zoom 🇸🇬", protocol: "VLESS", speed: "High", ping: "42ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=aka.ms&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" },
+  { id: 3, location: "SLT Zoom 🇸🇬", protocol: "VLESS", speed: "Ultra", ping: "35ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=zoom.us&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" },
   { id: 4, location: "Hutch Zoom 🇸🇬", protocol: "VLESS", speed: "Medium", ping: "50ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=teams.microsoft.com&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" },
   { id: 5, location: "Hutch Social 🇸🇬", protocol: "VLESS", speed: "High", ping: "48ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=t.me&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" },
   { id: 6, location: "Airtel/Dialog TikTok 🇸🇬", protocol: "VLESS", speed: "Ultra", ping: "40ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=tiktok.com&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" },
@@ -69,7 +69,7 @@ const itemVariants = {
   visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100 } }
 };
 
-// --- NEXT LEVEL LIVE BACKGROUND (NEURAL GRID) ---
+// --- LIVE BACKGROUND ---
 const LiveBackground = () => {
   const canvasRef = useRef(null);
   const mouse = useRef({ x: null, y: null, radius: 150 });
@@ -78,165 +78,89 @@ const LiveBackground = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     let particlesArray = [];
-
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
-    const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      init();
-    };
-
-    const handleMouseMove = (event) => {
-      mouse.current.x = event.x;
-      mouse.current.y = event.y;
-    };
-
+    const handleResize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; init(); };
+    const handleMouseMove = (event) => { mouse.current.x = event.x; mouse.current.y = event.y; };
     window.addEventListener('resize', handleResize);
     window.addEventListener('mousemove', handleMouseMove);
-
     class Particle {
-      constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.size = Math.random() * 2 + 0.5;
-        this.baseX = this.x;
-        this.baseY = this.y;
-        this.density = (Math.random() * 30) + 1;
-      }
-
-      draw() {
-        ctx.fillStyle = 'rgba(34, 211, 238, 0.8)';
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.closePath();
-        ctx.fill();
-      }
-
+      constructor(x, y) { this.x = x; this.y = y; this.size = Math.random() * 2 + 0.5; this.baseX = this.x; this.baseY = this.y; this.density = (Math.random() * 30) + 1; }
+      draw() { ctx.fillStyle = 'rgba(34, 211, 238, 0.8)'; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.closePath(); ctx.fill(); }
       update() {
-        let dx = mouse.current.x - this.x;
-        let dy = mouse.current.y - this.y;
-        let distance = Math.sqrt(dx * dx + dy * dy);
-        let forceDirectionX = dx / distance;
-        let forceDirectionY = dy / distance;
-        let maxDistance = mouse.current.radius;
-        let force = (maxDistance - distance) / maxDistance;
-        let directionX = forceDirectionX * force * this.density;
-        let directionY = forceDirectionY * force * this.density;
-
-        if (distance < mouse.current.radius) {
-          this.x -= directionX;
-          this.y -= directionY;
-        } else {
-          if (this.x !== this.baseX) {
-            let dx = this.x - this.baseX;
-            this.x -= dx / 10;
-          }
-          if (this.y !== this.baseY) {
-            let dy = this.y - this.baseY;
-            this.y -= dy / 10;
-          }
+        let dx = mouse.current.x - this.x; let dy = mouse.current.y - this.y; let distance = Math.sqrt(dx * dx + dy * dy);
+        let forceDirectionX = dx / distance; let forceDirectionY = dy / distance; let maxDistance = mouse.current.radius;
+        let force = (maxDistance - distance) / maxDistance; let directionX = forceDirectionX * force * this.density; let directionY = forceDirectionY * force * this.density;
+        if (distance < mouse.current.radius) { this.x -= directionX; this.y -= directionY; } else {
+          if (this.x !== this.baseX) { let dx = this.x - this.baseX; this.x -= dx / 10; }
+          if (this.y !== this.baseY) { let dy = this.y - this.baseY; this.y -= dy / 10; }
         }
       }
     }
-
     function init() {
-      particlesArray = [];
-      // Adjust density based on screen size
-      const numberOfParticles = (canvas.width * canvas.height) / 9000;
-      for (let i = 0; i < numberOfParticles; i++) {
-        let x = Math.random() * canvas.width;
-        let y = Math.random() * canvas.height;
-        particlesArray.push(new Particle(x, y));
-      }
+      particlesArray = []; const numberOfParticles = (canvas.width * canvas.height) / 9000;
+      for (let i = 0; i < numberOfParticles; i++) { let x = Math.random() * canvas.width; let y = Math.random() * canvas.height; particlesArray.push(new Particle(x, y)); }
     }
-
     function connect() {
-      let opacityValue = 1;
       for (let a = 0; a < particlesArray.length; a++) {
         for (let b = a; b < particlesArray.length; b++) {
-          let dx = particlesArray[a].x - particlesArray[b].x;
-          let dy = particlesArray[a].y - particlesArray[b].y;
+          let dx = particlesArray[a].x - particlesArray[b].x; let dy = particlesArray[a].y - particlesArray[b].y;
           let distance = Math.sqrt(dx * dx + dy * dy);
-
           if (distance < 100) {
-            opacityValue = 1 - (distance / 100);
-            ctx.strokeStyle = `rgba(34, 211, 238, ${opacityValue * 0.2})`;
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-            ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-            ctx.stroke();
+            ctx.strokeStyle = `rgba(34, 211, 238, ${(1 - (distance / 100)) * 0.2})`; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(particlesArray[a].x, particlesArray[a].y); ctx.lineTo(particlesArray[b].x, particlesArray[b].y); ctx.stroke();
           }
         }
       }
     }
-
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let i = 0; i < particlesArray.length; i++) {
-        particlesArray[i].draw();
-        particlesArray[i].update();
-      }
-      connect();
-      requestAnimationFrame(animate);
-    }
-
-    init();
-    animate();
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
+    function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); for (let i = 0; i < particlesArray.length; i++) { particlesArray[i].draw(); particlesArray[i].update(); } connect(); requestAnimationFrame(animate); }
+    init(); animate();
+    return () => { window.removeEventListener('resize', handleResize); window.removeEventListener('mousemove', handleMouseMove); };
   }, []);
 
   return (
     <div className="fixed inset-0 z-0 pointer-events-none bg-[#050508]">
-      {/* Deep Glow Effects */}
       <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(6,78,113,0.15)_0%,rgba(5,5,8,1)_80%)]"></div>
-      <motion.div 
-        animate={{ opacity: [0.2, 0.4, 0.2] }} 
-        transition={{ duration: 8, repeat: Infinity }}
-        className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-[120px]" 
-      />
-      <motion.div 
-        animate={{ opacity: [0.1, 0.3, 0.1] }} 
-        transition={{ duration: 10, repeat: Infinity }}
-        className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[120px]" 
-      />
       <canvas ref={canvasRef} className="absolute inset-0 block" />
-      {/* Grid Pattern Overlay */}
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] pointer-events-none"></div>
     </div>
   );
 };
 
-// --- TECH TICKER ---
-const TechTicker = () => {
-  return (
-    <div className="bg-[#0a0a0f]/80 backdrop-blur-md border-y border-white/5 py-2 overflow-hidden whitespace-nowrap relative z-10 shadow-2xl">
-      <div className="flex animate-marquee">
-        {[...TICKER_MESSAGES, ...TICKER_MESSAGES].map((msg, i) => (
-          <span key={i} className="mx-8 text-[10px] md:text-xs font-bold tracking-[0.2em] text-cyan-400/80 flex items-center gap-3">
-            <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full animate-ping" /> {msg}
-          </span>
-        ))}
+// --- UPDATE PANEL COMPONENT ---
+const UpdatePanel = () => (
+  <motion.div initial={{ x: 100, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="fixed right-4 top-24 z-[45] hidden lg:block w-64">
+    <div className="bg-[#0a0a0f]/90 backdrop-blur-xl border border-cyan-500/30 rounded-xl p-4 shadow-[0_0_30px_rgba(34,211,238,0.2)]">
+      <div className="flex items-center gap-2 mb-3 border-b border-cyan-500/20 pb-2">
+        <Bell className="text-cyan-400 animate-bounce" size={18} />
+        <h3 className="text-white font-bold text-sm tracking-widest uppercase">Update Panel</h3>
       </div>
-      <style>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-marquee {
-          display: inline-flex;
-          animation: marquee 40s linear infinite;
-        }
-      `}</style>
+      <div className="space-y-3">
+        <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-lg p-2">
+          <p className="text-cyan-300 text-[11px] font-bold uppercase animate-pulse">● New Update</p>
+          <p className="text-white text-xs mt-1">SLT Netflix Free Config updated for 15 Days! 🚀</p>
+        </div>
+        <div className="bg-white/5 border border-white/10 rounded-lg p-2">
+          <p className="text-gray-400 text-[10px]">10 Feb 2026</p>
+          <p className="text-gray-300 text-xs">All free servers optimized for low latency.</p>
+        </div>
+      </div>
     </div>
-  );
-};
+  </motion.div>
+);
+
+// --- TECH TICKER ---
+const TechTicker = () => (
+  <div className="bg-[#0a0a0f]/80 backdrop-blur-md border-y border-white/5 py-2 overflow-hidden whitespace-nowrap relative z-10">
+    <div className="flex animate-marquee">
+      {[...TICKER_MESSAGES, ...TICKER_MESSAGES].map((msg, i) => (
+        <span key={i} className="mx-8 text-[10px] md:text-xs font-bold tracking-[0.2em] text-cyan-400/80 flex items-center gap-3">
+          <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full animate-ping" /> {msg}
+        </span>
+      ))}
+    </div>
+    <style>{`@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } } .animate-marquee { display: inline-flex; animation: marquee 40s linear infinite; }`}</style>
+  </div>
+);
 
 // --- AI COMPONENTS ---
 
@@ -256,19 +180,12 @@ const AIChatWidget = () => {
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setLoading(true);
-
     try {
       const apiKey = "AIzaSyDIPcbkvqZbJOy7pnQzt47EeeH6JpNII5w";
-      const systemPrompt = `You are OSKA, an elite cyberpunk AI assistant for a VPN service in Sri Lanka. 
-      NEW PRICING (30 Days): 
-      1. Mobile SIM (100 GB) - Rs. 200 (Unlimited GB: Rs. 400). Supports: Dialog 547/797, Hutch Social, Airtel Zoom/TikTok/260. 
-      2. Router (100 GB) - Rs. 300 (Unlimited GB: Rs. 800). Supports: Dialog/SLT Zoom & Netflix Routers. 
-      3. Fiber (100 GB) - Rs. 300 (Unlimited GB: Rs. 800). Supports: SLT Fiber Zoom/Netflix.
-      If user asks how to buy: Tell them to go to 'Premium Store' or click 'Buy Now'.`;
-      
+      const systemPrompt = `You are OSKA AI assistant for a VPN service in Sri Lanka.`;
       const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: input }] }], systemInstruction: { parts: [{ text: systemPrompt }] } }) });
       const data = await response.json();
-      const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Connection intercepted. Please try again.";
+      const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Connection intercepted.";
       setMessages(prev => [...prev, { role: 'model', text: aiText }]);
     } catch (error) { setMessages(prev => [...prev, { role: 'model', text: "Error: Neural link unstable." }]); } finally { setLoading(false); }
   };
@@ -279,9 +196,9 @@ const AIChatWidget = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div initial={{ opacity: 0, y: 50, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 50, scale: 0.9 }} className="fixed bottom-24 right-6 z-50 w-[90vw] md:w-96 bg-[#0a0a0f]/95 backdrop-blur-xl border border-cyan-500/50 rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col h-[500px]">
-            <div className="bg-gradient-to-r from-cyan-900/40 to-blue-900/40 p-4 border-b border-cyan-500/30 flex items-center gap-2"><Bot size={20} className="text-cyan-400" /><div><h3 className="text-white font-bold text-sm tracking-wider">OSKA CYBER AI</h3><div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span><span className="text-xs text-cyan-400/80">Online</span></div></div></div>
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">{messages.map((msg, idx) => (<div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}><div className={`max-w-[85%] p-3 rounded-lg text-sm ${msg.role === 'user' ? 'bg-cyan-600/20 text-cyan-100 border border-cyan-500/30 rounded-br-none shadow-lg shadow-cyan-500/10' : 'bg-[#1a1a24] text-gray-300 border border-white/10 rounded-bl-none'}`}>{msg.text}</div></div>))}{loading && (<div className="flex justify-start"><div className="bg-[#1a1a24] p-3 rounded-lg rounded-bl-none border border-white/10 flex gap-1"><span className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce"></span><span className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce delay-100"></span><span className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce delay-200"></span></div></div>)}<div ref={messagesEndRef} /></div>
-            <div className="p-4 bg-[#12121a]/80 border-t border-white/10"><div className="flex gap-2"><input type="text" value={input} onChange={(e) => setInput(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && handleSend()} placeholder="Ask OSKA AI..." className="flex-1 bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:border-cyan-500 focus:outline-none placeholder-gray-600 focus:ring-1 focus:ring-cyan-500/50 transition-all" /><button onClick={handleSend} disabled={loading} className="p-2 bg-cyan-500/20 text-cyan-400 rounded-lg hover:bg-cyan-500 hover:text-black transition-all disabled:opacity-50"><Send size={18} /></button></div></div>
+            <div className="bg-gradient-to-r from-cyan-900/40 to-blue-900/40 p-4 border-b border-cyan-500/30 flex items-center gap-2"><Bot size={20} className="text-cyan-400" /><h3 className="text-white font-bold text-sm tracking-wider">OSKA CYBER AI</h3></div>
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">{messages.map((msg, idx) => (<div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}><div className={`max-w-[85%] p-3 rounded-lg text-sm ${msg.role === 'user' ? 'bg-cyan-600/20 text-cyan-100 border border-cyan-500/30 rounded-br-none' : 'bg-[#1a1a24] text-gray-300 border border-white/10 rounded-bl-none'}`}>{msg.text}</div></div>))}<div ref={messagesEndRef} /></div>
+            <div className="p-4 bg-[#12121a]/80 border-t border-white/10"><div className="flex gap-2"><input type="text" value={input} onChange={(e) => setInput(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && handleSend()} placeholder="Ask OSKA AI..." className="flex-1 bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none" /><button onClick={handleSend} disabled={loading} className="p-2 bg-cyan-500/20 text-cyan-400 rounded-lg hover:bg-cyan-500 hover:text-black transition-all"><Send size={18} /></button></div></div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -296,22 +213,39 @@ const Navbar = ({ activeTab, setActiveTab }) => {
   const menuItems = [{ id: 'home', label: 'Home' }, { id: 'free', label: 'Free Configs' }, { id: 'pricing', label: 'Premium Store' }, { id: 'tutorials', label: 'Tutorials' }];
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#050508]/80 backdrop-blur-xl border-b border-white/5 h-16">
-      <div className="max-w-7xl mx-auto px-4 h-full"><div className="flex items-center justify-between h-full"><div className="flex items-center gap-2 cursor-pointer group" onClick={() => setActiveTab('home')}><div className="relative"><Shield className="w-8 h-8 text-cyan-400 relative z-10 transition-transform group-hover:scale-110 duration-300" /><div className="absolute inset-0 bg-cyan-400 blur-lg opacity-50 group-hover:opacity-100 transition-opacity"></div></div><span className="text-2xl font-bold tracking-wider text-white">OSKA<span className="text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]">VPN</span></span></div><div className="hidden md:flex space-x-8">{menuItems.map((item) => (<button key={item.id} onClick={() => setActiveTab(item.id)} className={`relative text-sm font-medium transition-all duration-300 px-3 py-2 rounded-lg ${activeTab === item.id ? 'text-cyan-400 bg-cyan-400/10 shadow-[0_0_15px_rgba(34,211,238,0.2)]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>{item.label}{activeTab === item.id && (<motion.div layoutId="navbar-indicator" className="absolute bottom-0 left-0 right-0 h-0.5 bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,1)]" />)}</button>))}</div><div className="md:hidden"><button onClick={() => setIsOpen(!isOpen)} className="text-gray-400 hover:text-white p-2">{isOpen ? <X size={24} /> : <Menu size={24} />}</button></div></div></div>
-      <AnimatePresence>{isOpen && (<motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="md:hidden bg-[#0a0a0f]/95 backdrop-blur-xl border-b border-white/10 overflow-hidden absolute w-full left-0 top-16"><div className="px-4 py-4 space-y-2">{menuItems.map((item) => (<button key={item.id} onClick={() => { setActiveTab(item.id); setIsOpen(false); }} className={`block w-full text-left px-4 py-3 text-base font-medium rounded-lg transition-colors ${activeTab === item.id ? 'bg-cyan-400/10 text-cyan-400' : 'text-gray-300 hover:bg-white/5'}`}>{item.label}</button>))}</div></motion.div>)}</AnimatePresence>
+      <div className="max-w-7xl mx-auto px-4 h-full"><div className="flex items-center justify-between h-full"><div className="flex items-center gap-2 cursor-pointer group" onClick={() => setActiveTab('home')}><Shield className="w-8 h-8 text-cyan-400" /><span className="text-2xl font-bold tracking-wider text-white">OSKA<span className="text-cyan-400">VPN</span></span></div><div className="hidden md:flex space-x-8">{menuItems.map((item) => (<button key={item.id} onClick={() => setActiveTab(item.id)} className={`relative text-sm font-medium transition-all px-3 py-2 rounded-lg ${activeTab === item.id ? 'text-cyan-400 bg-cyan-400/10' : 'text-gray-400 hover:text-white'}`}>{item.label}</button>))}</div><div className="md:hidden"><button onClick={() => setIsOpen(!isOpen)} className="text-gray-400 hover:text-white p-2">{isOpen ? <X size={24} /> : <Menu size={24} />}</button></div></div></div>
     </nav>
   );
 };
 
+// --- CONFIG CARD WITH COUNTDOWN ---
 const ConfigCard = ({ config, highlighted }) => {
   const [copied, setCopied] = useState(false);
   const handleCopy = () => { navigator.clipboard.writeText(config.code); setCopied(true); setTimeout(() => setCopied(false), 2000); };
+  
+  // Fake 15-day countdown logic
+  const [timeLeft, setTimeLeft] = useState("14d 23h 59m");
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const expiry = new Date("Feb 25, 2026 23:59:59").getTime();
+      const diff = expiry - now;
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      setTimeLeft(`${d}d ${h}h ${m}m`);
+    }, 60000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
-    <motion.div variants={itemVariants} whileHover={{ y: -5, scale: 1.02 }} className={`bg-[#12121a]/40 backdrop-blur-md border rounded-xl p-5 transition-all duration-300 group relative overflow-hidden ${highlighted ? 'border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.2)] ring-1 ring-cyan-400' : 'border-white/10 hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(34,211,238,0.15)]'}`}>
-      {highlighted && (<div className="absolute top-0 right-0 bg-cyan-400 text-black text-[10px] font-bold px-2 py-1 rounded-bl-lg z-20 flex items-center gap-1 shadow-lg"><Sparkles size={10} /> AI PICK</div>)}
-      <div className={`absolute top-0 right-0 w-20 h-20 blur-2xl rounded-full -translate-y-1/2 translate-x-1/2 transition-colors duration-500 ${highlighted ? 'bg-cyan-500/30' : 'bg-cyan-500/10 group-hover:bg-cyan-500/20'}`}></div>
-      <div className="flex justify-between items-start mb-4 relative z-10"><div><div className="flex items-center gap-2 mb-1"><Globe size={18} className="text-purple-400 group-hover:text-purple-300 transition-colors" /><h3 className="font-bold text-lg text-white group-hover:text-cyan-200 transition-colors">{config.location}</h3></div><span className="text-xs bg-white/5 px-2 py-1 rounded text-cyan-300 font-mono border border-cyan-500/20">{config.protocol}</span></div><div className="text-right"><div className="flex items-center gap-1 justify-end text-green-400 text-sm font-bold"><Activity size={14} className="animate-pulse" /><span>{config.ping}</span></div><p className="text-xs text-gray-500 mt-1">{config.updated}</p></div></div>
-      <div className="bg-black/40 p-3 rounded mb-4 font-mono text-xs text-gray-400 truncate border border-white/5 group-hover:border-white/10 transition-colors">{config.code}</div>
-      <button onClick={handleCopy} className={`w-full py-2.5 rounded-lg font-bold flex items-center justify-center gap-2 transition-all duration-200 active:scale-95 ${copied ? 'bg-green-500/20 text-green-400 border border-green-500/50' : highlighted ? 'bg-cyan-400 text-black border border-cyan-400 hover:bg-cyan-300 shadow-lg shadow-cyan-400/20' : 'bg-cyan-400/10 text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400 hover:text-black hover:shadow-[0_0_15px_rgba(34,211,238,0.4)]'}`}>{copied ? <><Check size={18} /> Copied</> : <><Copy size={18} /> Copy Config</>}</button>
+    <motion.div variants={itemVariants} whileHover={{ y: -5, scale: 1.02 }} className={`bg-[#12121a]/40 backdrop-blur-md border rounded-xl p-5 transition-all duration-300 group relative overflow-hidden ${highlighted ? 'border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.2)]' : 'border-white/10 hover:border-cyan-400/50'}`}>
+      <div className="absolute top-0 right-0 bg-red-600/20 text-red-400 text-[9px] font-bold px-2 py-1 rounded-bl-lg z-20 flex items-center gap-1 border-l border-b border-red-500/30 tracking-widest uppercase italic">
+        <Clock size={10} /> {timeLeft} LEFT
+      </div>
+      <div className="flex justify-between items-start mb-4 relative z-10"><div><div className="flex items-center gap-2 mb-1"><Globe size={18} className="text-purple-400" /><h3 className="font-bold text-lg text-white group-hover:text-cyan-200">{config.location}</h3></div><span className="text-xs bg-white/5 px-2 py-1 rounded text-cyan-300 font-mono border border-cyan-500/20">{config.protocol}</span></div><div className="text-right"><div className="flex items-center gap-1 justify-end text-green-400 text-sm font-bold"><Activity size={14} className="animate-pulse" /><span>{config.ping}</span></div><p className="text-xs text-gray-500 mt-1">{config.updated}</p></div></div>
+      <div className="bg-black/40 p-3 rounded mb-4 font-mono text-xs text-gray-400 truncate border border-white/5">{config.code}</div>
+      <button onClick={handleCopy} className={`w-full py-2.5 rounded-lg font-bold flex items-center justify-center gap-2 transition-all duration-200 active:scale-95 ${copied ? 'bg-green-500/20 text-green-400 border border-green-500/50' : 'bg-cyan-400/10 text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400 hover:text-black hover:shadow-[0_0_15px_rgba(34,211,238,0.4)]'}`}>{copied ? <><Check size={18} /> Copied</> : <><Copy size={18} /> Copy Config</>}</button>
     </motion.div>
   );
 };
@@ -319,119 +253,69 @@ const ConfigCard = ({ config, highlighted }) => {
 const OrderModal = ({ pkg, onClose }) => {
   const [name, setName] = useState('');
   const [device, setDevice] = useState('Android');
-  const handleSubmit = (e) => { e.preventDefault(); window.open(`https://wa.me/${ADMIN_PHONE}?text=${encodeURIComponent(`*NEW ORDER - OSKA VPN*\n\n📦 *Package:* ${pkg.name}\n💰 *Price:* ${pkg.price} ${pkg.period}\n🏷️ *Data:* ${pkg.data} / ${pkg.extra}\n👤 *Name:* ${name}\n📱 *Device:* ${device}\n\nI want to buy this package.`)}`, '_blank'); onClose(); };
+  const handleSubmit = (e) => { e.preventDefault(); window.open(`https://wa.me/${ADMIN_PHONE}?text=${encodeURIComponent(`*NEW ORDER*\n📦 *Package:* ${pkg.name}`)}`, '_blank'); onClose(); };
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in zoom-in duration-200">
-      <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-[#16161f] border border-cyan-400/30 rounded-2xl w-full max-w-md p-6 relative shadow-[0_0_50px_rgba(34,211,238,0.2)]">
-        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white"><X size={24} /></button><h2 className="text-2xl font-bold mb-1 text-white">Checkout</h2><p className="text-gray-400 text-sm mb-6">You selected: <span className="text-cyan-400 font-bold">{pkg.name}</span></p>
-        <form onSubmit={handleSubmit} className="space-y-4"><div><label className="block text-sm text-gray-400 mb-1">Your Name</label><input required type="text" className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 outline-none transition-colors" placeholder="Ex: Oshada" value={name} onChange={(e) => setName(e.target.value)} /></div><div><label className="block text-sm text-gray-400 mb-1">Device Type</label><select className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-cyan-400 outline-none" value={device} onChange={(e) => setDevice(e.target.value)}><option value="Android">Android (v2rayNG)</option><option value="iOS">iOS (Shadowrocket)</option><option value="PC">PC / Laptop</option><option value="Router">Wi-Fi Router</option></select></div><button type="submit" className="w-full bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg flex items-center justify-center gap-2 mt-4 transition-all shadow-[0_0_15px_rgba(34,197,94,0.4)] hover:shadow-[0_0_25px_rgba(34,197,94,0.6)]"><MessageCircle size={20} /> Buy via WhatsApp</button></form>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+      <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-[#16161f] border border-cyan-400/30 rounded-2xl w-full max-w-md p-6 relative">
+        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white"><X size={24} /></button>
+        <h2 className="text-2xl font-bold mb-6 text-white text-center italic tracking-widest border-b border-cyan-400/20 pb-2 uppercase">Checkout</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div><label className="block text-xs text-cyan-400 uppercase tracking-widest font-bold mb-1">Your Name</label><input required type="text" className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-cyan-400 outline-none" placeholder="Ex: Oshada" value={name} onChange={(e) => setName(e.target.value)} /></div>
+          <div><label className="block text-xs text-cyan-400 uppercase tracking-widest font-bold mb-1">Device Type</label><select className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-cyan-400 outline-none" value={device} onChange={(e) => setDevice(e.target.value)}><option value="Android">Android</option><option value="iOS">iOS</option><option value="PC">PC</option><option value="Router">Router</option></select></div>
+          <button type="submit" className="w-full bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg flex items-center justify-center gap-2 mt-4 uppercase tracking-widest italic transition-all">Buy via WhatsApp</button>
+        </form>
       </motion.div>
     </div>
   );
 };
 
-// --- PAGES ---
+// --- VIEWS ---
 
 const HomeView = ({ setTab }) => (
   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] w-full text-center px-4 relative overflow-hidden pt-10 pb-10">
     <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
-      <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="inline-block px-4 py-1 rounded-full bg-white/5 border border-white/10 text-cyan-300 text-xs md:text-sm font-medium mb-6 animate-pulse">🚀 #1 High Speed V2Ray VPN in Sri Lanka</motion.div>
-      <motion.h1 initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }} className="text-5xl md:text-7xl lg:text-8xl font-extrabold mb-6 tracking-tight text-white leading-tight drop-shadow-[0_0_20px_rgba(34,211,238,0.4)]">UNLEASH <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 animate-gradient">ULTIMATE</span><br/> FREEDOM</motion.h1>
-      <motion.p initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }} className="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">Gaming, Streaming, and Browsing with 0% Lag. Secure, Fast, and Untraceable connections.</motion.p>
-      
-      <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.6 }} className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-        <button onClick={() => setTab('free')} className="px-8 py-4 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-cyan-400/50 text-white transition-all font-bold backdrop-blur-sm flex items-center justify-center gap-2 w-full sm:w-auto hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]"><Zap size={20} className="text-yellow-400"/> Get Free Configs</button>
-        <button onClick={() => setTab('pricing')} className="px-8 py-4 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] transition-all flex items-center justify-center gap-2 w-full sm:w-auto transform hover:scale-105 duration-200"><Lock size={20} /> Buy Premium</button>
-      </motion.div>
-
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="mt-12 flex flex-col md:flex-row gap-6 w-full max-w-2xl px-4">
-        <motion.a href="https://chat.whatsapp.com/LUE12DSAPkkK5Z9wirTV7n" target="_blank" whileHover={{ scale: 1.05 }} className="flex-1 flex items-center justify-between bg-[#25D366]/10 border border-[#25D366]/50 p-4 rounded-xl hover:bg-[#25D366]/20 transition-all cursor-pointer group shadow-[0_0_15px_rgba(37,211,102,0.2)]">
-          <div className="flex items-center gap-3"><WhatsAppIcon className="w-8 h-8 text-[#25D366]" /><div className="text-left"><h3 className="text-white font-bold">Main Group</h3><p className="text-[#25D366] text-xs">Official Updates</p></div></div>
-          <div className="flex items-center gap-2"><span className="text-white font-bold text-sm animate-pulse drop-shadow-[0_0_5px_#25D366]">JOIN NOW</span><ArrowRight size={16} className="text-white group-hover:translate-x-1 transition-transform" /></div>
-        </motion.a>
-        <motion.a href="https://chat.whatsapp.com/DAXjobEWqxs16rXFH3fk7L" target="_blank" whileHover={{ scale: 1.05 }} className="flex-1 flex items-center justify-between bg-[#25D366]/10 border border-[#25D366]/50 p-4 rounded-xl hover:bg-[#25D366]/20 transition-all cursor-pointer group shadow-[0_0_15px_rgba(37,211,102,0.2)]">
-          <div className="flex items-center gap-3"><WhatsAppIcon className="w-8 h-8 text-[#25D366]" /><div className="text-left"><h3 className="text-white font-bold">Chat Group</h3><p className="text-[#25D366] text-xs">Community Support</p></div></div>
-          <div className="flex items-center gap-2"><span className="text-white font-bold text-sm animate-pulse drop-shadow-[0_0_5px_#25D366]">JOIN NOW</span><ArrowRight size={16} className="text-white group-hover:translate-x-1 transition-transform" /></div>
-        </motion.a>
-      </motion.div>
-
+      <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="inline-block px-4 py-1 rounded-full bg-white/5 border border-white/10 text-cyan-300 text-xs md:text-sm font-medium mb-6 animate-pulse uppercase tracking-[0.3em]">🚀 #1 V2Ray VPN IN SRI LANKA</motion.div>
+      <motion.h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold mb-6 tracking-tight text-white leading-tight drop-shadow-[0_0_20px_rgba(34,211,238,0.4)] uppercase italic">UNLEASH <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 animate-gradient">ULTIMATE</span><br/> FREEDOM</motion.h1>
+      <motion.p className="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">Gaming, Streaming, and Browsing with 0% Lag. Secure, Fast, and Untraceable connections.</motion.p>
+      <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+        <button onClick={() => setTab('free')} className="px-8 py-4 rounded-full bg-white/5 border border-white/10 hover:border-cyan-400/50 text-white transition-all font-bold backdrop-blur-sm flex items-center justify-center gap-2">Get Free Configs</button>
+        <button onClick={() => setTab('pricing')} className="px-8 py-4 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] transition-all flex items-center justify-center gap-2">Buy Premium</button>
+      </div>
       {/* TECH PULSE SECTION */}
       <div className="mt-20 w-full max-w-6xl">
-        <div className="flex items-center gap-2 mb-8 justify-center md:justify-start">
-          <div className="w-2 h-8 bg-cyan-400 rounded-full" />
-          <h2 className="text-2xl font-bold text-white tracking-[0.2em]">TECH PULSE</h2>
-          <div className="h-[1px] flex-1 bg-gradient-to-r from-cyan-400/50 to-transparent ml-4 hidden md:block"></div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {TECH_NEWS.map((news, i) => (
-            <motion.div key={i} whileHover={{ scale: 1.02, y: -5 }} className="bg-white/5 border border-white/10 p-5 rounded-xl text-left hover:bg-cyan-500/5 hover:border-cyan-500/30 transition-all group relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-16 h-16 bg-cyan-400/5 rounded-bl-full translate-x-8 -translate-y-8 group-hover:translate-x-4 group-hover:-translate-y-4 transition-transform" />
-              <span className="text-[10px] text-cyan-400 font-bold uppercase tracking-widest">{news.time}</span>
-              <h3 className="text-white font-bold mt-1 group-hover:text-cyan-200">{news.title}</h3>
-              <p className="text-gray-400 text-xs mt-2 leading-relaxed">{news.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-16 w-full max-w-6xl">
-        {[{ icon: Zap, title: "Low Ping Gaming", desc: "Optimized routes for PUBG, COD, and FreeFire." }, { icon: Shield, title: "100% Secure", desc: "Your data is encrypted. No logs policy." }, { icon: Globe, title: "Unblock Everything", desc: "Access WhatsApp, YouTube & TikTok without limits." }].map((item, i) => (
-          <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 + (i * 0.1) }} whileHover={{ y: -5 }} className="bg-[#12121a]/40 backdrop-blur-md border border-white/5 p-6 rounded-2xl hover:bg-[#12121a]/60 hover:border-cyan-500/30 transition-all duration-300 text-left flex flex-col items-center md:items-start text-center md:text-left hover:shadow-lg hover:shadow-cyan-900/20">
-            <item.icon className="w-10 h-10 text-cyan-400 mb-4 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]" /><h3 className="text-lg font-bold text-white">{item.title}</h3><p className="text-gray-400 text-sm mt-2">{item.desc}</p>
-          </motion.div>
-        ))}
+        <div className="flex items-center gap-2 mb-8 justify-center md:justify-start"><div className="w-2 h-8 bg-cyan-400 rounded-full" /><h2 className="text-2xl font-bold text-white tracking-[0.2em] uppercase italic">TECH PULSE</h2><div className="h-[1px] flex-1 bg-gradient-to-r from-cyan-400/50 to-transparent ml-4 hidden md:block"></div></div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">{TECH_NEWS.map((news, i) => (<motion.div key={i} whileHover={{ scale: 1.02 }} className="bg-white/5 border border-white/10 p-5 rounded-xl text-left hover:border-cyan-500/30 group transition-all relative overflow-hidden"><span className="text-[10px] text-cyan-400 font-bold uppercase tracking-widest">{news.time}</span><h3 className="text-white font-bold mt-1 group-hover:text-cyan-200 uppercase tracking-tighter">{news.title}</h3><p className="text-gray-400 text-xs mt-2 leading-relaxed">{news.desc}</p></motion.div>))}</div>
       </div>
     </div>
   </motion.div>
 );
 
-const FreeView = () => {
-  const [userGoal, setUserGoal] = useState('');
-  const [recommendedId, setRecommendedId] = useState(null);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const getRecommendation = async () => { if (!userGoal.trim()) return; setIsAnalyzing(true); setRecommendedId(null); try { const apiKey = "AIzaSyDIPcbkvqZbJOy7pnQzt47EeeH6JpNII5w"; const prompt = `I have these V2Ray configs: ${JSON.stringify(FREE_CONFIGS.map(c => ({id: c.id, location: c.location, speed: c.speed})))}. User wants: "${userGoal}". Task: Which ID is best? Return ONLY the ID number (e.g. 1). If unsure, return 1.`; const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) }); const data = await response.json(); const id = parseInt(data.candidates?.[0]?.content?.parts?.[0]?.text?.trim()); if (!isNaN(id)) setRecommendedId(id); } catch (e) { console.error(e); } finally { setIsAnalyzing(false); } };
-  return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="py-10 px-4 max-w-6xl mx-auto min-h-screen">
-      <div className="mb-10 bg-gradient-to-r from-cyan-900/20 to-purple-900/20 p-6 rounded-2xl border border-cyan-500/30 backdrop-blur-sm"><div className="flex flex-col md:flex-row gap-4 items-center justify-between"><div><h2 className="text-xl font-bold text-white flex items-center gap-2"><Wand2 className="text-cyan-400" /> Smart Config Matcher</h2><p className="text-gray-400 text-sm">Tell AI what you want to do (e.g. "Gaming on Dialog" or "Netflix SLT")</p></div><div className="flex w-full md:w-auto gap-2"><input type="text" placeholder="I want to play COD Mobile..." className="bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white text-sm focus:border-cyan-400 outline-none w-full md:w-64 transition-all focus:shadow-[0_0_10px_rgba(34,211,238,0.3)]" value={userGoal} onChange={(e) => setUserGoal(e.target.value)} /><button onClick={getRecommendation} disabled={isAnalyzing} className="bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-4 py-2 rounded-lg flex items-center gap-2 transition-all hover:shadow-lg hover:shadow-cyan-500/30 disabled:opacity-50">{isAnalyzing ? <RefreshCw className="animate-spin" size={18} /> : <Sparkles size={18} />} {isAnalyzing ? "Analyzing..." : "Find Best"}</button></div></div></div>
-      <div className="flex justify-between items-center mb-6"><div><h1 className="text-2xl md:text-3xl font-bold text-white mb-1">Free V2Ray Configs</h1><p className="text-gray-400 text-sm">Updated automatically every 30 minutes.</p></div><button onClick={() => window.location.reload()} className="p-3 bg-white/5 rounded-full hover:bg-cyan-400 hover:text-black transition-colors text-white"><RefreshCw size={20} /></button></div>
-      <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20">{FREE_CONFIGS.map(config => <ConfigCard key={config.id} config={config} highlighted={config.id === recommendedId} />)}</motion.div>
-    </motion.div>
-  );
-};
+const FreeView = () => (
+  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="py-10 px-4 max-w-6xl mx-auto min-h-screen">
+    <div className="mb-10 bg-gradient-to-r from-cyan-900/20 to-purple-900/20 p-6 rounded-2xl border border-cyan-500/30 backdrop-blur-sm flex flex-col md:flex-row gap-4 items-center justify-between"><div><h2 className="text-xl font-bold text-white uppercase italic tracking-widest flex items-center gap-2"><Sparkles className="text-cyan-400" /> Free Servers</h2><p className="text-gray-400 text-sm font-bold">15-Day Rotation Period Active</p></div><button onClick={() => window.location.reload()} className="p-3 bg-white/5 rounded-full hover:bg-cyan-400 hover:text-black transition-colors text-white"><RefreshCw size={20} /></button></div>
+    <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20">{FREE_CONFIGS.map(config => <ConfigCard key={config.id} config={config} highlighted={config.id === 1} />)}</motion.div>
+  </motion.div>
+);
 
 const PricingView = () => {
   const [selectedPkg, setSelectedPkg] = useState(null);
-  const [userUsage, setUserUsage] = useState('');
-  const [aiRecommendation, setAiRecommendation] = useState(null);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const handlePlanRecommendation = async () => { if (!userUsage.trim()) return; setIsProcessing(true); setAiRecommendation(null); try { const apiKey = "AIzaSyDIPcbkvqZbJOy7pnQzt47EeeH6JpNII5w"; const prompt = `I have these premium packages: ${JSON.stringify(PACKAGES.map(p => ({id: p.id, name: p.name, data: p.data, features: p.features})))}. User needs: "${userUsage}". Task: 1. Identify the BEST package ID (mobile, router, or fiber). 2. Write a 1-sentence reason why. Return ONLY valid JSON like: {"id": "mobile", "reason": "Because you need..."}`; const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { responseMimeType: "application/json" } }) }); const data = await response.json(); const result = JSON.parse(data.candidates?.[0]?.content?.parts?.[0]?.text || "{}"); if (result.id) setAiRecommendation(result); } catch (e) { console.error(e); } finally { setIsProcessing(false); } };
   return (
     <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="py-10 px-4 max-w-7xl mx-auto min-h-screen">
-      <div className="text-center mb-10"><h1 className="text-4xl font-bold mb-4 text-white">Premium Plans (30 Days)</h1><p className="text-gray-400">High speed, low ping, unlimited freedom.</p></div>
-      <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 border border-purple-500/30 p-6 rounded-2xl mb-12 max-w-4xl mx-auto backdrop-blur-sm"><div className="flex items-center gap-3 mb-4"><BrainCircuit className="text-purple-400" size={24} /><h2 className="text-xl font-bold text-white">AI Plan Matcher</h2></div><p className="text-gray-300 text-sm mb-4">Not sure which plan to buy? Tell us what you do (e.g. "I play PUBG mostly" or "I need to download big movies") and AI will pick for you.</p><div className="flex flex-col sm:flex-row gap-3"><input type="text" placeholder="Describe your usage..." className="flex-1 bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-purple-400 outline-none transition-all focus:shadow-[0_0_10px_rgba(168,85,247,0.3)]" value={userUsage} onChange={(e) => setUserUsage(e.target.value)} /><button onClick={handlePlanRecommendation} disabled={isProcessing} className="bg-purple-600 hover:bg-purple-500 text-white font-bold px-6 py-3 rounded-lg flex items-center justify-center gap-2 transition-all hover:shadow-lg hover:shadow-purple-500/30 disabled:opacity-50">{isProcessing ? <RefreshCw className="animate-spin" /> : <Sparkles />}{isProcessing ? "Thinking..." : "Find Best Plan"}</button></div>{aiRecommendation && (<motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-4 p-4 bg-purple-500/10 border border-purple-500/40 rounded-xl"><p className="text-purple-200 font-medium"><span className="text-white font-bold">AI Suggestion:</span> {aiRecommendation.reason}</p></motion.div>)}</div>
-      <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid md:grid-cols-3 gap-8 mb-20">{PACKAGES.map((pkg) => (<motion.div variants={itemVariants} whileHover={{ y: -10, boxShadow: "0 0 30px rgba(6, 182, 212, 0.15)" }} key={pkg.id} className={`relative bg-[#12121a]/60 backdrop-blur-md rounded-2xl p-8 border transition-all duration-300 flex flex-col ${pkg.id === aiRecommendation?.id ? 'border-purple-500 shadow-[0_0_40px_rgba(168,85,247,0.3)] scale-105 z-10 ring-1 ring-purple-400' : pkg.popular ? 'border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.15)] scale-105 z-10' : 'border-white/10 hover:border-white/20'}`}>{pkg.id === aiRecommendation?.id && <span className="absolute -top-3 right-4 bg-purple-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1"><Sparkles size={12}/> AI RECOMMENDED</span>}{pkg.popular && !aiRecommendation && <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-cyan-400 text-black text-xs font-bold px-4 py-1 rounded-full shadow-lg">BEST SELLER</span>}<div className="flex items-center gap-3 mb-4"><div className={`p-3 rounded-lg bg-gradient-to-br ${pkg.color} bg-opacity-20`}><pkg.icon className="w-6 h-6 text-white" /></div><h3 className="text-xl font-bold text-gray-200">{pkg.name}</h3></div><div className="mb-6"><div className="flex items-baseline"><span className={`text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r ${pkg.color}`}>{pkg.price}</span><span className="text-gray-500 ml-2 text-sm">{pkg.period}</span></div><p className="text-white font-bold mt-2 flex items-center gap-2"><Server size={14} className="text-cyan-400"/> {pkg.data}</p><p className="text-cyan-400 text-sm font-semibold mt-1">➕ {pkg.extra}</p></div><ul className="space-y-4 mb-8 flex-1 border-t border-white/5 pt-6">{pkg.features.map((feat, i) => (<li key={i} className="flex items-center gap-3 text-sm text-gray-300"><CheckCircle size={16} className="text-cyan-400 min-w-[16px]" />{feat}</li>))}</ul><button onClick={() => setSelectedPkg(pkg)} className={`w-full py-3 rounded-lg font-bold transition-all ${pkg.popular ? 'bg-cyan-400 text-black hover:bg-cyan-300 hover:shadow-[0_0_15px_rgba(34,211,238,0.5)]' : 'bg-white/10 text-white hover:bg-white/20'}`}>Buy Now</button></motion.div>))}</motion.div>
-      <div className="mt-20"><h2 className="text-3xl font-bold text-center text-white mb-8 flex items-center justify-center gap-3"><Box className="text-cyan-400" /> Available V2Ray Packages</h2><motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid md:grid-cols-3 lg:grid-cols-5 gap-4 pb-20">{PROVIDER_PACKAGES.map((provider) => (<motion.div key={provider.id} variants={itemVariants} whileHover={{ y: -5, boxShadow: "0 0 20px rgba(255,255,255,0.05)" }} className={`bg-[#12121a]/60 backdrop-blur-md border border-white/10 rounded-xl p-6 flex flex-col items-center text-center transition-all hover:border-${provider.color.split('-')[1]}-500/50`}><div className={`w-12 h-12 rounded-full bg-gradient-to-br ${provider.color} flex items-center justify-center text-xl font-bold text-white mb-4 shadow-lg`}>{provider.name[0]}</div><h3 className="text-xl font-bold text-white mb-4">{provider.name}</h3><ul className="space-y-2 w-full">{provider.items.map((item, idx) => (<li key={idx} className="text-gray-300 text-xs bg-white/5 border border-white/5 rounded px-2 py-2 w-full">{item}</li>))}</ul></motion.div>))}</motion.div></div>
+      <div className="text-center mb-10"><h1 className="text-4xl font-bold mb-4 text-white uppercase italic tracking-widest">Premium Plans</h1><p className="text-gray-400">High speed, low ping, unlimited freedom.</p></div>
+      <div className="grid md:grid-cols-3 gap-8 mb-20">{PACKAGES.map((pkg) => (<motion.div key={pkg.id} whileHover={{ y: -10 }} className={`relative bg-[#12121a]/60 backdrop-blur-md rounded-2xl p-8 border transition-all ${pkg.popular ? 'border-cyan-400' : 'border-white/10'}`}><h3 className="text-xl font-bold text-gray-200 uppercase italic mb-4">{pkg.name}</h3><div className="mb-6"><span className={`text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r ${pkg.color}`}>{pkg.price}</span><span className="text-gray-500 ml-2 text-sm">{pkg.period}</span><p className="text-white font-bold mt-2 uppercase tracking-tighter">{pkg.data}</p></div><ul className="space-y-4 mb-8 flex-1 border-t border-white/5 pt-6">{pkg.features.map((feat, i) => (<li key={i} className="flex items-center gap-3 text-sm text-gray-300 italic"><CheckCircle size={16} className="text-cyan-400" />{feat}</li>))}</ul><button onClick={() => setSelectedPkg(pkg)} className={`w-full py-3 rounded-lg font-bold transition-all ${pkg.popular ? 'bg-cyan-400 text-black' : 'bg-white/10 text-white'}`}>Buy Now</button></motion.div>))}</div>
       {selectedPkg && <OrderModal pkg={selectedPkg} onClose={() => setSelectedPkg(null)} />}
     </motion.div>
   );
 };
 
-const TutorialsView = () => {
-  const [errorLog, setErrorLog] = useState('');
-  const [diagnosis, setDiagnosis] = useState('');
-  const [isDiagnosing, setIsDiagnosing] = useState(false);
-  const handleDiagnosis = async () => { if (!errorLog.trim()) return; setIsDiagnosing(true); setDiagnosis(''); try { const apiKey = "AIzaSyDIPcbkvqZbJOy7pnQzt47EeeH6JpNII5w"; const prompt = `You are a VPN expert. Analyze this V2Ray error log: "${errorLog}". Explain the issue in 1 simple sentence and suggest a fix. Keep it short.`; const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) }); const data = await response.json(); setDiagnosis(data.candidates?.[0]?.content?.parts?.[0]?.text || "Could not analyze."); } catch (e) { setDiagnosis("Error connecting to AI."); } finally { setIsDiagnosing(false); } };
-  return (
-    <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="py-10 px-4 max-w-4xl mx-auto min-h-screen">
-      <h1 className="text-3xl font-bold mb-10 text-center text-white">Support & Tutorials</h1>
-      <div className="bg-[#12121a]/60 backdrop-blur-md border border-red-500/30 rounded-2xl p-6 mb-10 shadow-[0_0_20px_rgba(239,68,68,0.1)]"><div className="flex items-center gap-3 mb-4"><Stethoscope className="text-red-400" /><h2 className="text-xl font-bold text-white">AI Error Diagnostics</h2></div><p className="text-gray-400 text-sm mb-4">Paste your V2Ray log error here (e.g., "io: read/write on closed pipe") and our AI will fix it.</p><div className="space-y-4"><textarea value={errorLog} onChange={(e) => setErrorLog(e.target.value)} placeholder="Paste error log here..." className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-sm text-white focus:border-red-400 outline-none h-24" /><button onClick={handleDiagnosis} disabled={isDiagnosing} className="bg-red-500/10 text-red-400 border border-red-500/50 hover:bg-red-500 hover:text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all disabled:opacity-50">{isDiagnosing ? "Analyzing..." : <> <AlertTriangle size={16}/> Analyze Error</>}</button>{diagnosis && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-green-500/10 border border-green-500/30 p-4 rounded-lg"><h3 className="text-green-400 font-bold text-sm mb-1">AI Diagnosis:</h3><p className="text-gray-300 text-sm">{diagnosis}</p></motion.div>}</div></div>
-      <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-6 pb-20">
-        <motion.div variants={itemVariants} className="bg-[#12121a]/60 backdrop-blur-md border border-white/10 rounded-2xl p-6 hover:border-green-500/30 transition-colors"><div className="flex items-center gap-3 mb-4 border-b border-white/5 pb-4"><Smartphone className="text-green-400 w-8 h-8" /><h2 className="text-xl font-bold text-white">Android (v2rayNG)</h2></div><ol className="list-decimal list-inside space-y-3 text-gray-400 ml-2"><li>Download <span className="text-green-400 font-bold">v2rayNG</span> from Play Store.</li><li>Copy a config from our Free Configs page.</li><li>Open app → Click <span className="text-white font-bold">+</span> icon (top right).</li><li>Select <span className="text-white bg-white/10 px-2 py-0.5 rounded text-sm">Import config from Clipboard</span>.</li><li>Tap the big <span className="text-white bg-green-600 px-2 py-0.5 rounded text-sm">V</span> button to connect.</li></ol></motion.div>
-        <motion.div variants={itemVariants} className="bg-[#12121a]/60 backdrop-blur-md border border-white/10 rounded-2xl p-6 hover:border-blue-500/30 transition-colors"><div className="flex items-center gap-3 mb-4 border-b border-white/5 pb-4"><Smartphone className="text-blue-400 w-8 h-8" /><h2 className="text-xl font-bold text-white">iPhone (Shadowrocket)</h2></div><ol className="list-decimal list-inside space-y-3 text-gray-400 ml-2"><li>Get <span className="text-blue-400 font-bold">Shadowrocket</span> or <span className="text-blue-400 font-bold">FairVPN</span>.</li><li>Copy a config from the site.</li><li>Open the app (it detects clipboard automatically).</li><li>Tap <span className="text-white bg-blue-600 px-2 py-0.5 rounded text-sm">Add</span>.</li><li>Toggle the switch to connect.</li></ol></motion.div>
-      </motion.div>
-    </motion.div>
-  );
-};
+const TutorialsView = () => (
+  <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="py-10 px-4 max-w-4xl mx-auto min-h-screen">
+    <h1 className="text-3xl font-bold mb-10 text-center text-white uppercase italic tracking-[0.3em]">Support & Tutorials</h1>
+    <div className="space-y-6">
+      <div className="bg-[#12121a]/60 backdrop-blur-md border border-white/10 rounded-2xl p-6"><h2 className="text-xl font-bold text-white mb-4 border-b border-white/5 pb-2 uppercase italic tracking-widest">How to Connect</h2><ol className="list-decimal list-inside space-y-3 text-gray-400 ml-2 italic"><li>Download v2rayNG or Shadowrocket.</li><li>Copy Config from Free Configs.</li><li>Import from Clipboard in the app.</li><li>Click Connect button.</li></ol></div>
+    </div>
+  </motion.div>
+);
 
 // --- MAIN APP ---
 
@@ -440,11 +324,9 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#050508] text-gray-100 font-sans selection:bg-cyan-400 selection:text-black relative flex flex-col pt-16">
       <LiveBackground />
-      {/* TECH TICKER BELOW NAVBAR */}
-      <div className="fixed top-16 left-0 right-0 z-40">
-        <TechTicker />
-      </div>
+      <div className="fixed top-16 left-0 right-0 z-40"><TechTicker /></div>
       <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <UpdatePanel /> {/* SIDE MESSAGE BLINK PANEL */}
       <main className="flex-grow w-full relative z-10 pt-12">
         <AnimatePresence mode="wait">
           {activeTab === 'home' && <HomeView key="home" setTab={setActiveTab} />}
@@ -454,14 +336,8 @@ export default function App() {
         </AnimatePresence>
       </main>
       <AIChatWidget />
-      <footer className="bg-black/80 backdrop-blur-md py-8 text-center text-gray-600 text-sm border-t border-white/5 relative z-10">
-        <div className="flex items-center justify-center gap-4 mb-4 opacity-50">
-          <div className="h-[1px] w-12 bg-gray-600" />
-          <Shield size={20} className="text-cyan-400" />
-          <div className="h-[1px] w-12 bg-gray-600" />
-        </div>
-        <p className="font-bold tracking-widest text-gray-400">SECURE V2RAY NETWORK</p>
-        <p className="mt-2">© 2026 OSKA VPN. Made for Sri Lanka 🇱🇰</p>
+      <footer className="bg-black/80 backdrop-blur-md py-8 text-center text-gray-600 text-sm border-t border-white/5 relative z-10 italic uppercase tracking-[0.2em]">
+        <p>© 2026 OSKA VPN. Premium V2Ray Solution 🇱🇰</p>
       </footer>
     </div>
   );
