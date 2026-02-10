@@ -4,7 +4,7 @@ import {
   Smartphone, Activity, RefreshCw, MessageCircle, 
   CheckCircle, Server, Lock, Bot, Send, Sparkles, 
   Wifi, Router as RouterIcon, Wand2, AlertTriangle, Stethoscope, BrainCircuit, Box, ArrowRight,
-  Newspaper, Radio // අලුතින් එකතු කළ Icons
+  Newspaper, Radio
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -69,89 +69,158 @@ const itemVariants = {
   visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100 } }
 };
 
-// --- LIVE BACKGROUND COMPONENT ---
+// --- NEXT LEVEL LIVE BACKGROUND (NEURAL GRID) ---
 const LiveBackground = () => {
   const canvasRef = useRef(null);
+  const mouse = useRef({ x: null, y: null, radius: 150 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    
-    const resizeCanvas = () => {
+    let particlesArray = [];
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const handleResize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      init();
     };
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
 
-    const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
-    const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const nums = '0123456789';
-    const alphabet = katakana + latin + nums;
+    const handleMouseMove = (event) => {
+      mouse.current.x = event.x;
+      mouse.current.y = event.y;
+    };
 
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('mousemove', handleMouseMove);
 
-    const rainDrops = [];
-    for (let x = 0; x < columns; x++) {
-      rainDrops[x] = 1;
+    class Particle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = Math.random() * 2 + 0.5;
+        this.baseX = this.x;
+        this.baseY = this.y;
+        this.density = (Math.random() * 30) + 1;
+      }
+
+      draw() {
+        ctx.fillStyle = 'rgba(34, 211, 238, 0.8)';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      update() {
+        let dx = mouse.current.x - this.x;
+        let dy = mouse.current.y - this.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+        let forceDirectionX = dx / distance;
+        let forceDirectionY = dy / distance;
+        let maxDistance = mouse.current.radius;
+        let force = (maxDistance - distance) / maxDistance;
+        let directionX = forceDirectionX * force * this.density;
+        let directionY = forceDirectionY * force * this.density;
+
+        if (distance < mouse.current.radius) {
+          this.x -= directionX;
+          this.y -= directionY;
+        } else {
+          if (this.x !== this.baseX) {
+            let dx = this.x - this.baseX;
+            this.x -= dx / 10;
+          }
+          if (this.y !== this.baseY) {
+            let dy = this.y - this.baseY;
+            this.y -= dy / 10;
+          }
+        }
+      }
     }
 
-    const draw = () => {
-      ctx.fillStyle = 'rgba(10, 10, 15, 0.05)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.font = fontSize + 'px monospace';
-
-      for (let i = 0; i < rainDrops.length; i++) {
-        const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-        const isCyan = Math.random() > 0.5;
-        ctx.fillStyle = isCyan ? '#22d3ee' : '#a855f7';
-        
-        if (Math.random() > 0.98) {
-           ctx.shadowBlur = 10;
-           ctx.shadowColor = isCyan ? '#22d3ee' : '#a855f7';
-           ctx.fillStyle = '#ffffff';
-        } else {
-           ctx.shadowBlur = 0;
-        }
-
-        ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-
-        if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-          rainDrops[i] = 0;
-        }
-        rainDrops[i]++;
+    function init() {
+      particlesArray = [];
+      // Adjust density based on screen size
+      const numberOfParticles = (canvas.width * canvas.height) / 9000;
+      for (let i = 0; i < numberOfParticles; i++) {
+        let x = Math.random() * canvas.width;
+        let y = Math.random() * canvas.height;
+        particlesArray.push(new Particle(x, y));
       }
-    };
+    }
 
-    const interval = setInterval(draw, 30);
+    function connect() {
+      let opacityValue = 1;
+      for (let a = 0; a < particlesArray.length; a++) {
+        for (let b = a; b < particlesArray.length; b++) {
+          let dx = particlesArray[a].x - particlesArray[b].x;
+          let dy = particlesArray[a].y - particlesArray[b].y;
+          let distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 100) {
+            opacityValue = 1 - (distance / 100);
+            ctx.strokeStyle = `rgba(34, 211, 238, ${opacityValue * 0.2})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+            ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].draw();
+        particlesArray[i].update();
+      }
+      connect();
+      requestAnimationFrame(animate);
+    }
+
+    init();
+    animate();
 
     return () => {
-      clearInterval(interval);
-      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
 
   return (
-    <div className="fixed inset-0 z-0 pointer-events-none bg-[#0a0a0f]">
-      <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1], rotate: [0, 90, 0] }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-purple-900/20 rounded-full blur-[120px]" />
-      <motion.div animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.2, 0.1], x: [0, 100, 0] }} transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }} className="absolute bottom-[-20%] right-[-10%] w-[700px] h-[700px] bg-cyan-900/20 rounded-full blur-[120px]" />
-      <canvas ref={canvasRef} className="absolute inset-0 block opacity-25" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)] pointer-events-none"></div>
+    <div className="fixed inset-0 z-0 pointer-events-none bg-[#050508]">
+      {/* Deep Glow Effects */}
+      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(6,78,113,0.15)_0%,rgba(5,5,8,1)_80%)]"></div>
+      <motion.div 
+        animate={{ opacity: [0.2, 0.4, 0.2] }} 
+        transition={{ duration: 8, repeat: Infinity }}
+        className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-[120px]" 
+      />
+      <motion.div 
+        animate={{ opacity: [0.1, 0.3, 0.1] }} 
+        transition={{ duration: 10, repeat: Infinity }}
+        className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[120px]" 
+      />
+      <canvas ref={canvasRef} className="absolute inset-0 block" />
+      {/* Grid Pattern Overlay */}
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] pointer-events-none"></div>
     </div>
   );
 };
 
-// --- NEW COMPONENT: TECH TICKER ---
+// --- TECH TICKER ---
 const TechTicker = () => {
   return (
-    <div className="bg-cyan-500/10 border-y border-cyan-500/20 py-2 overflow-hidden whitespace-nowrap relative z-10">
+    <div className="bg-[#0a0a0f]/80 backdrop-blur-md border-y border-white/5 py-2 overflow-hidden whitespace-nowrap relative z-10 shadow-2xl">
       <div className="flex animate-marquee">
         {[...TICKER_MESSAGES, ...TICKER_MESSAGES].map((msg, i) => (
-          <span key={i} className="mx-8 text-xs font-bold text-cyan-400 flex items-center gap-2">
-            <Radio size={14} className="animate-pulse" /> {msg}
+          <span key={i} className="mx-8 text-[10px] md:text-xs font-bold tracking-[0.2em] text-cyan-400/80 flex items-center gap-3">
+            <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full animate-ping" /> {msg}
           </span>
         ))}
       </div>
@@ -162,7 +231,7 @@ const TechTicker = () => {
         }
         .animate-marquee {
           display: inline-flex;
-          animation: marquee 30s linear infinite;
+          animation: marquee 40s linear infinite;
         }
       `}</style>
     </div>
@@ -226,9 +295,9 @@ const Navbar = ({ activeTab, setActiveTab }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuItems = [{ id: 'home', label: 'Home' }, { id: 'free', label: 'Free Configs' }, { id: 'pricing', label: 'Premium Store' }, { id: 'tutorials', label: 'Tutorials' }];
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/80 backdrop-blur-xl border-b border-white/5 h-16">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#050508]/80 backdrop-blur-xl border-b border-white/5 h-16">
       <div className="max-w-7xl mx-auto px-4 h-full"><div className="flex items-center justify-between h-full"><div className="flex items-center gap-2 cursor-pointer group" onClick={() => setActiveTab('home')}><div className="relative"><Shield className="w-8 h-8 text-cyan-400 relative z-10 transition-transform group-hover:scale-110 duration-300" /><div className="absolute inset-0 bg-cyan-400 blur-lg opacity-50 group-hover:opacity-100 transition-opacity"></div></div><span className="text-2xl font-bold tracking-wider text-white">OSKA<span className="text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]">VPN</span></span></div><div className="hidden md:flex space-x-8">{menuItems.map((item) => (<button key={item.id} onClick={() => setActiveTab(item.id)} className={`relative text-sm font-medium transition-all duration-300 px-3 py-2 rounded-lg ${activeTab === item.id ? 'text-cyan-400 bg-cyan-400/10 shadow-[0_0_15px_rgba(34,211,238,0.2)]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>{item.label}{activeTab === item.id && (<motion.div layoutId="navbar-indicator" className="absolute bottom-0 left-0 right-0 h-0.5 bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,1)]" />)}</button>))}</div><div className="md:hidden"><button onClick={() => setIsOpen(!isOpen)} className="text-gray-400 hover:text-white p-2">{isOpen ? <X size={24} /> : <Menu size={24} />}</button></div></div></div>
-      <AnimatePresence>{isOpen && (<motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="md:hidden bg-[#12121a]/95 backdrop-blur-xl border-b border-white/10 overflow-hidden absolute w-full left-0 top-16"><div className="px-4 py-4 space-y-2">{menuItems.map((item) => (<button key={item.id} onClick={() => { setActiveTab(item.id); setIsOpen(false); }} className={`block w-full text-left px-4 py-3 text-base font-medium rounded-lg transition-colors ${activeTab === item.id ? 'bg-cyan-400/10 text-cyan-400' : 'text-gray-300 hover:bg-white/5'}`}>{item.label}</button>))}</div></motion.div>)}</AnimatePresence>
+      <AnimatePresence>{isOpen && (<motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="md:hidden bg-[#0a0a0f]/95 backdrop-blur-xl border-b border-white/10 overflow-hidden absolute w-full left-0 top-16"><div className="px-4 py-4 space-y-2">{menuItems.map((item) => (<button key={item.id} onClick={() => { setActiveTab(item.id); setIsOpen(false); }} className={`block w-full text-left px-4 py-3 text-base font-medium rounded-lg transition-colors ${activeTab === item.id ? 'bg-cyan-400/10 text-cyan-400' : 'text-gray-300 hover:bg-white/5'}`}>{item.label}</button>))}</div></motion.div>)}</AnimatePresence>
     </nav>
   );
 };
@@ -237,11 +306,11 @@ const ConfigCard = ({ config, highlighted }) => {
   const [copied, setCopied] = useState(false);
   const handleCopy = () => { navigator.clipboard.writeText(config.code); setCopied(true); setTimeout(() => setCopied(false), 2000); };
   return (
-    <motion.div variants={itemVariants} whileHover={{ y: -5, scale: 1.02 }} className={`bg-[#12121a]/60 backdrop-blur-md border rounded-xl p-5 transition-all duration-300 group relative overflow-hidden ${highlighted ? 'border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.2)] ring-1 ring-cyan-400' : 'border-white/10 hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(34,211,238,0.15)]'}`}>
+    <motion.div variants={itemVariants} whileHover={{ y: -5, scale: 1.02 }} className={`bg-[#12121a]/40 backdrop-blur-md border rounded-xl p-5 transition-all duration-300 group relative overflow-hidden ${highlighted ? 'border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.2)] ring-1 ring-cyan-400' : 'border-white/10 hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(34,211,238,0.15)]'}`}>
       {highlighted && (<div className="absolute top-0 right-0 bg-cyan-400 text-black text-[10px] font-bold px-2 py-1 rounded-bl-lg z-20 flex items-center gap-1 shadow-lg"><Sparkles size={10} /> AI PICK</div>)}
       <div className={`absolute top-0 right-0 w-20 h-20 blur-2xl rounded-full -translate-y-1/2 translate-x-1/2 transition-colors duration-500 ${highlighted ? 'bg-cyan-500/30' : 'bg-cyan-500/10 group-hover:bg-cyan-500/20'}`}></div>
       <div className="flex justify-between items-start mb-4 relative z-10"><div><div className="flex items-center gap-2 mb-1"><Globe size={18} className="text-purple-400 group-hover:text-purple-300 transition-colors" /><h3 className="font-bold text-lg text-white group-hover:text-cyan-200 transition-colors">{config.location}</h3></div><span className="text-xs bg-white/5 px-2 py-1 rounded text-cyan-300 font-mono border border-cyan-500/20">{config.protocol}</span></div><div className="text-right"><div className="flex items-center gap-1 justify-end text-green-400 text-sm font-bold"><Activity size={14} className="animate-pulse" /><span>{config.ping}</span></div><p className="text-xs text-gray-500 mt-1">{config.updated}</p></div></div>
-      <div className="bg-black/40 p-3 rounded mb-4 font-mono text-xs text-gray-500 truncate border border-white/5 group-hover:border-white/10 transition-colors">{config.code}</div>
+      <div className="bg-black/40 p-3 rounded mb-4 font-mono text-xs text-gray-400 truncate border border-white/5 group-hover:border-white/10 transition-colors">{config.code}</div>
       <button onClick={handleCopy} className={`w-full py-2.5 rounded-lg font-bold flex items-center justify-center gap-2 transition-all duration-200 active:scale-95 ${copied ? 'bg-green-500/20 text-green-400 border border-green-500/50' : highlighted ? 'bg-cyan-400 text-black border border-cyan-400 hover:bg-cyan-300 shadow-lg shadow-cyan-400/20' : 'bg-cyan-400/10 text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400 hover:text-black hover:shadow-[0_0_15px_rgba(34,211,238,0.4)]'}`}>{copied ? <><Check size={18} /> Copied</> : <><Copy size={18} /> Copy Config</>}</button>
     </motion.div>
   );
@@ -267,7 +336,7 @@ const HomeView = ({ setTab }) => (
   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] w-full text-center px-4 relative overflow-hidden pt-10 pb-10">
     <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
       <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="inline-block px-4 py-1 rounded-full bg-white/5 border border-white/10 text-cyan-300 text-xs md:text-sm font-medium mb-6 animate-pulse">🚀 #1 High Speed V2Ray VPN in Sri Lanka</motion.div>
-      <motion.h1 initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }} className="text-5xl md:text-7xl lg:text-8xl font-extrabold mb-6 tracking-tight text-white leading-tight drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">UNLEASH <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 animate-gradient">ULTIMATE</span><br/> FREEDOM</motion.h1>
+      <motion.h1 initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }} className="text-5xl md:text-7xl lg:text-8xl font-extrabold mb-6 tracking-tight text-white leading-tight drop-shadow-[0_0_20px_rgba(34,211,238,0.4)]">UNLEASH <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 animate-gradient">ULTIMATE</span><br/> FREEDOM</motion.h1>
       <motion.p initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }} className="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">Gaming, Streaming, and Browsing with 0% Lag. Secure, Fast, and Untraceable connections.</motion.p>
       
       <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.6 }} className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
@@ -286,16 +355,17 @@ const HomeView = ({ setTab }) => (
         </motion.a>
       </motion.div>
 
-      {/* NEW TECH PULSE SECTION */}
+      {/* TECH PULSE SECTION */}
       <div className="mt-20 w-full max-w-6xl">
         <div className="flex items-center gap-2 mb-8 justify-center md:justify-start">
-          <Newspaper className="text-cyan-400" />
-          <h2 className="text-2xl font-bold text-white tracking-widest">TECH PULSE</h2>
+          <div className="w-2 h-8 bg-cyan-400 rounded-full" />
+          <h2 className="text-2xl font-bold text-white tracking-[0.2em]">TECH PULSE</h2>
           <div className="h-[1px] flex-1 bg-gradient-to-r from-cyan-400/50 to-transparent ml-4 hidden md:block"></div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {TECH_NEWS.map((news, i) => (
-            <motion.div key={i} whileHover={{ scale: 1.02 }} className="bg-white/5 border border-white/10 p-5 rounded-xl text-left hover:bg-cyan-500/5 hover:border-cyan-500/30 transition-all group">
+            <motion.div key={i} whileHover={{ scale: 1.02, y: -5 }} className="bg-white/5 border border-white/10 p-5 rounded-xl text-left hover:bg-cyan-500/5 hover:border-cyan-500/30 transition-all group relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-16 h-16 bg-cyan-400/5 rounded-bl-full translate-x-8 -translate-y-8 group-hover:translate-x-4 group-hover:-translate-y-4 transition-transform" />
               <span className="text-[10px] text-cyan-400 font-bold uppercase tracking-widest">{news.time}</span>
               <h3 className="text-white font-bold mt-1 group-hover:text-cyan-200">{news.title}</h3>
               <p className="text-gray-400 text-xs mt-2 leading-relaxed">{news.desc}</p>
@@ -368,9 +438,9 @@ const TutorialsView = () => {
 export default function App() {
   const [activeTab, setActiveTab] = useState('home');
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-gray-100 font-sans selection:bg-cyan-400 selection:text-black relative flex flex-col pt-16">
+    <div className="min-h-screen bg-[#050508] text-gray-100 font-sans selection:bg-cyan-400 selection:text-black relative flex flex-col pt-16">
       <LiveBackground />
-      {/* ADDED TECH TICKER BELOW NAVBAR */}
+      {/* TECH TICKER BELOW NAVBAR */}
       <div className="fixed top-16 left-0 right-0 z-40">
         <TechTicker />
       </div>
@@ -385,8 +455,13 @@ export default function App() {
       </main>
       <AIChatWidget />
       <footer className="bg-black/80 backdrop-blur-md py-8 text-center text-gray-600 text-sm border-t border-white/5 relative z-10">
-        <p className="flex items-center justify-center gap-2 mb-2"><Shield size={16} /> Secure V2Ray Network</p>
-        <p>© 2026 OSKA VPN. Made for Sri Lanka 🇱🇰</p>
+        <div className="flex items-center justify-center gap-4 mb-4 opacity-50">
+          <div className="h-[1px] w-12 bg-gray-600" />
+          <Shield size={20} className="text-cyan-400" />
+          <div className="h-[1px] w-12 bg-gray-600" />
+        </div>
+        <p className="font-bold tracking-widest text-gray-400">SECURE V2RAY NETWORK</p>
+        <p className="mt-2">© 2026 OSKA VPN. Made for Sri Lanka 🇱🇰</p>
       </footer>
     </div>
   );
