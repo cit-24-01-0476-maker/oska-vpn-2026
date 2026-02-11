@@ -22,7 +22,7 @@ const FREE_CONFIGS = [
   { id: 2, location: "Dialog Zoom 🇸🇬", protocol: "VLESS", speed: "High", ping: "42ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=aka.ms&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" },
   { id: 3, location: "SLT Zoom 🇸🇬", protocol: "VLESS", speed: "Ultra", ping: "35ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=zoom.us&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" },
   { id: 4, location: "Hutch Zoom 🇸🇬", protocol: "VLESS", speed: "Medium", ping: "50ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=teams.microsoft.com&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" },
-  { id: 5, location: "Hutch Social 🇸🇬", protocol: "VLESS", speed: "High", ping: "48ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=t.me&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" },
+  { id: 5, location: "Hutch Social 🇸🇬", protocol: "Trojan", speed: "High", ping: "48ms", updated: "Just now", code: "nm-trojan://RJlcw9ISN/E7LvlnAfqfPf24aemt45b7QG+QI8Zsi4ZjNdm2uFzFTaaz9pijBBQNuDJmzYhtfb/wNyCUp9v0maDU8NReEenmUaqCilCK0cwJKXA4yNRIwSyvJ8uAjf6jvH5P13Bxf4LvE9vP7lHoU5I+5hY6wGazp+xcE8HrMjE=" },
   { id: 6, location: "Airtel/Dialog TikTok 🇸🇬", protocol: "VLESS", speed: "Ultra", ping: "40ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=tiktok.com&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" },
   { id: 7, location: "Airtel Zoom 🇸🇬", protocol: "VLESS", speed: "High", ping: "45ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=m.zoom.us&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" },
   { id: 8, location: "Airtel 260 🇸🇬", protocol: "VLESS", speed: "High", ping: "44ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=m.youtube.com&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" }
@@ -221,11 +221,11 @@ const UpdatePanel = () => (
       <div className="space-y-3">
         <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-lg p-2">
           <p className="text-cyan-300 text-[11px] font-bold uppercase animate-pulse">● New Update</p>
-          <p className="text-white text-xs mt-1">SLT Netflix Free Config updated for 15 Days! 🚀</p>
+          <p className="text-white text-xs mt-1">Hutch Social Free Config updated for 15 Days! 🔥</p>
         </div>
         <div className="bg-white/5 border border-white/10 rounded-lg p-2">
-          <p className="text-gray-400 text-[10px]">10 Feb 2026</p>
-          <p className="text-gray-300 text-xs">All free servers optimized for low latency.</p>
+          <p className="text-cyan-300 text-[10px] font-bold uppercase">● Recent Update</p>
+          <p className="text-gray-300 text-xs mt-1">SLT Netflix Free Config updated for 15 Days! 🚀</p>
         </div>
       </div>
     </div>
