@@ -18,14 +18,14 @@ const WhatsAppIcon = ({ className }) => (
 // --- DATA CONFIGURATION ---
 
 const FREE_CONFIGS = [
-  { id: 1, location: "SLT Netflix 🇸🇬", protocol: "Trojan", speed: "Ultra", ping: "22ms", updated: "Just now", code: "nm-trojan://6fTISs8DA8cRHqVc4nlIX/24aemt45b7QG+QI8Zsi4ZjNdm2uFzFTaaz9pijBBQNuDJmzYhtfb/wNyCUp9v0mfgkbLVqaRqZQoYF+ej3EGBtmtN+GZevtLz9i6u8Vf/GeAwQbL2ms3FYvcqLbKrmJCyYpt06WdC4UR2zMPmSy1ec4uW7IkquvggdMs9VdNZm" },
-  { id: 2, location: "Dialog Zoom 🇸🇬", protocol: "VLESS", speed: "High", ping: "42ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=aka.ms&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" },
-  { id: 3, location: "SLT Zoom 🇸🇬", protocol: "VLESS", speed: "Ultra", ping: "35ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=zoom.us&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" },
-  { id: 4, location: "Hutch Zoom 🇸🇬", protocol: "VLESS", speed: "Medium", ping: "50ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=teams.microsoft.com&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" },
-  { id: 5, location: "Hutch Social 🇸🇬", protocol: "Trojan", speed: "High", ping: "48ms", updated: "Just now", code: "nm-trojan://RJlcw9ISN/E7LvlnAfqfPf24aemt45b7QG+QI8Zsi4ZjNdm2uFzFTaaz9pijBBQNuDJmzYhtfb/wNyCUp9v0maDU8NReEenmUaqCilCK0cwJKXA4yNRIwSyvJ8uAjf6jvH5P13Bxf4LvE9vP7lHoU5I+5hY6wGazp+xcE8HrMjE=" },
-  { id: 6, location: "Airtel/Dialog TikTok 🇸🇬", protocol: "VLESS", speed: "Ultra", ping: "40ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=tiktok.com&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" },
-  { id: 7, location: "Airtel Zoom 🇸🇬", protocol: "VLESS", speed: "High", ping: "45ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=m.zoom.us&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" },
-  { id: 8, location: "Airtel 260 🇸🇬", protocol: "VLESS", speed: "High", ping: "44ms", updated: "Just now", code: "vless://35f947c3-4c61-4a6f-bba2-99f1f4b2014b@vip.v2raystorm.store:443?security=tls&sni=m.youtube.com&alpn=http/1.1&allowInsecure=1&fp=chrome&type=tcp&encryption=none#Freeplus" }
+  { id: 1, location: "SLT Zoom 🇸🇬", protocol: "VLESS", speed: "Ultra", ping: "22ms", updated: "Just now", code: "nm-vless://xY4ziFf2+a3x9hPJGPlK+SX7zif0DqN9/twWwu13c2Vllm++fH6qMuiOyj9NUxYgc5udascqQmJ++16m63wSrORwtw3gQZOJe6gBpQtkR/mFEBNPJ43l2IYL9Mf187x0d7N51hq0LvN6TlnG+eWoCX8eVhoKx+ykQO6jTcOJMXC5WaDM7cStCGIVTLb7PnF15avXgkjLeCPEw8fiQvqDrmSDxZNV5zvpxqUHoWwLM67kmpbHfi+qzqWC5EuxBfz4" },
+  { id: 2, location: "SLT Netflix 🇸🇬", protocol: "VLESS", speed: "Ultra", ping: "25ms", updated: "Just now", code: "nm-vless://pGSwaVt8hgPinRT9mfpM1wDeldM4LTJmMJXcdqcjSVdfpCOo8cGVu7Mfgl9L5Fm7c5udascqQmJ++16m63wSrORwtw3gQZOJe6gBpQtkR/mFEBNPJ43l2IYL9Mf187x0d7N51hq0LvN6TlnG+eWoCXmQ+InonGtYBjE1R+7ubIq4+o1JEsQsWVDi06Qd1dokzQAF8SKzwTp53Cjp3jIksfSrYvI1bIlFBGDN1VQpO5/7SbQMjcDUU/8Q0iBp8UoM" },
+  { id: 3, location: "Dialog Zoom Router 🇸🇬", protocol: "VLESS", speed: "High", ping: "38ms", updated: "Just now", code: "nm-vless://iilBvBJzp8Ntls8abtfWdOpDiKQILu27PzSi0qcUc71QWEZ16H+kK0XKU4dqfiXqc5udascqQmJ++16m63wSrORwtw3gQZOJe6gBpQtkR/mFEBNPJ43l2IYL9Mf187x0d7N51hq0LvN6TlnG+eWoCXYHVdiDLW9comfYaIv2kSatO0E5bA++yH68KXMfm6B1UqfR2J1GNJQqFMU+7FB9wjnQwVol/KZqPODtrKL9Y5YKvSaS/zBXWYF5mtmO6owS" },
+  { id: 4, location: "Airtel Zoom 🇸🇬", protocol: "VLESS", speed: "High", ping: "42ms", updated: "Just now", code: "nm-vless://Q/JIk4YjxW5FjayTrQ9zZ+IdiVWhdYYcuP499PnIlF8skqyMfvm+i6jvJ+NQSYBUc5udascqQmJ++16m63wSrORwtw3gQZOJe6gBpQtkR/mFEBNPJ43l2IYL9Mf187x0d7N51hq0LvN6TlnG+eWoCX8eVhoKx+ykQO6jTcOJMXC5WaDM7cStCGIVTLb7PnF1FKesMt82j2J4yQBQeO498nFN8aH6qVvEU+g5sXfV4T0vBX4euswQuFmYIHhiuScg" },
+  { id: 5, location: "Airtel YouTube 🇸🇬", protocol: "VLESS", speed: "Medium", ping: "45ms", updated: "Just now", code: "nm-vless://wsCygmfaMmTjzncIYY7aQmpKC/oMtQAR5atrQs69WrqE14vk4R6BAPz6dsEaTEk+c5udascqQmJ++16m63wSrORwtw3gQZOJe6gBpQtkR/mFEBNPJ43l2IYL9Mf187x0d7N51hq0LvN6TlnG+eWoCceVKkw2vtBDPA+1RgumI6bUBVDpAOO5eWNwlBZNgicXcJP0XRfO2o9HD9ASGdQ2xmhpNfUg5PQM7QeK9C+uPs77SbQMjcDUU/8Q0iBp8UoM" },
+  { id: 6, location: "Airtel/Dialog TikTok 🇸🇬", protocol: "VLESS", speed: "Ultra", ping: "30ms", updated: "Just now", code: "nm-vless://VxBM7DvTuJzj7xvMecrjT87IdK+/bLr18oNpWk7N6jxOZCCB+2SEderW2yqyQmAtc5udascqQmJ++16m63wSrORwtw3gQZOJe6gBpQtkR/mFEBNPJ43l2IYL9Mf187x0d7N51hq0LvN6TlnG+eWoCU5kRHgFZAFRyahwLt0tVjt2mjO+hRZgC0uor1wTfOppjCK9WgNpGaBbjT1Lt7v+lhxZcbrWR0ILSb2+ncbCe9+Vlrmskbd3KaJdudUNg2JSKZdqKfiPeHKs902kDafXRA==" },
+  { id: 7, location: "Hutch 169 🇸🇬", protocol: "VLESS", speed: "High", ping: "55ms", updated: "Just now", code: "nm-vless://fyNGDXFqU2aMtID3LfTe5R3EPO2pN/5ZESVad7hcW5+ZB6nOSUx2JbSO+oEUMArwc5udascqQmJ++16m63wSrORwtw3gQZOJe6gBpQtkR/mFEBNPJ43l2IYL9Mf187x0d7N51hq0LvN6TlnG+eWoCWmnBm6xoPEvzZZ0ELsB7s2m4xX9ygw1+A7TiY2hOxi4Ef52t1wLanPrDU9JqUm0DMD3bDHAU+JqaFEQkv7lO5IdE3avsCNUNkkOZ5njd6kj" },
+  { id: 8, location: "Airtel 148/498 🇸🇬", protocol: "VLESS", speed: "High", ping: "40ms", updated: "Just now", code: "nm-vless://7cZF45OIWKDMOrW9kvSNZeSeYCfORdcX7hrJsjv9hGgp5Yqow77nssf0erh48Y4bc5udascqQmJ++16m63wSrORwtw3gQZOJe6gBpQtkR/mFEBNPJ43l2IYL9Mf187x0d7N51hq0LvN6TlnG+eWoCY8uOrhko6oJM9tlOxHSBv2neVMMhv2OT1+0LzRvTeqYCSlwOMjUSMEsryfLgI3+oyxUylMqZEn+znRPlBv9XMwA5Qv65vUJEpsjSy+YCkC+n50Cj5EwKQPpiPXn0ENlmg==" }
 ];
 
 const PACKAGES = [
@@ -220,12 +220,12 @@ const UpdatePanel = () => (
       </div>
       <div className="space-y-3">
         <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-lg p-2">
-          <p className="text-cyan-300 text-[11px] font-bold uppercase animate-pulse">● New Update</p>
-          <p className="text-white text-xs mt-1">Hutch Social Free Config updated for 15 Days! 🔥</p>
+          <p className="text-cyan-300 text-[11px] font-bold uppercase animate-pulse">● Latest Update</p>
+          <p className="text-white text-xs mt-1">All Free Configs (Dialog, SLT, Airtel, Hutch) Updated! 🔥</p>
         </div>
         <div className="bg-white/5 border border-white/10 rounded-lg p-2">
-          <p className="text-cyan-300 text-[10px] font-bold uppercase">● Recent Update</p>
-          <p className="text-gray-300 text-xs mt-1">SLT Netflix Free Config updated for 15 Days! 🚀</p>
+          <p className="text-cyan-300 text-[10px] font-bold uppercase">● Status</p>
+          <p className="text-gray-300 text-xs mt-1">Servers are stable & high speed. 🚀</p>
         </div>
       </div>
     </div>
