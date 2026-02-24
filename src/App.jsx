@@ -221,7 +221,7 @@ const UpdatePanel = () => (
       <div className="space-y-3">
         <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-lg p-2">
           <p className="text-cyan-300 text-[11px] font-bold uppercase animate-pulse">● Latest Update</p>
-          <p className="text-white text-xs mt-1">All Free Configs (Dialog, SLT, Airtel, Hutch) Updated! 🔥</p>
+          <p className="text-white text-xs mt-1">All Free Configs (Dialog, SLT, Airtel, Hutch) Updated for 3 Days! 🔥</p>
         </div>
         <div className="bg-white/5 border border-white/10 rounded-lg p-2">
           <p className="text-cyan-300 text-[10px] font-bold uppercase">● Status</p>
@@ -326,13 +326,19 @@ const ConfigCard = ({ config, highlighted }) => {
   const [copied, setCopied] = useState(false);
   const handleCopy = () => { navigator.clipboard.writeText(config.code); setCopied(true); setTimeout(() => setCopied(false), 2000); };
   
-  const [timeLeft, setTimeLeft] = useState({ days: 15, hours: 0, minutes: 0, seconds: 0 });
+  // LIVE 3 DAYS COUNTDOWN LOGIC (Starts from now + 3 Days)
+  const [timeLeft, setTimeLeft] = useState({ days: 2, hours: 23, minutes: 59, seconds: 59 });
 
   useEffect(() => {
-    const expiryDate = new Date("Feb 25, 2026 23:59:59").getTime();
+    // Set target to 3 days from the current moment the user loads the page
+    // Using a fixed relative offset to simulate "3 days left" for the user
+    const now = new Date().getTime();
+    const expiryDate = now + (3 * 24 * 60 * 60 * 1000); 
+
     const interval = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = expiryDate - now;
+      const currentTime = new Date().getTime();
+      const distance = expiryDate - currentTime;
+
       if (distance < 0) {
         clearInterval(interval);
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -344,8 +350,9 @@ const ConfigCard = ({ config, highlighted }) => {
         setTimeLeft({ days, hours, minutes, seconds });
       }
     }, 1000);
+
     return () => clearInterval(interval);
-  }, []);
+  }, []); // Empty dependency array means it sets the 3-day target once on mount
 
   return (
     <motion.div variants={itemVariants} whileHover={{ y: -5, scale: 1.02 }} className={`bg-[#12121a]/40 backdrop-blur-md border rounded-xl p-5 transition-all duration-300 group relative overflow-visible mt-8 mx-auto w-full ${highlighted ? 'border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.2)] ring-1 ring-cyan-400' : 'border-white/10 hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(34,211,238,0.15)]'}`}>
